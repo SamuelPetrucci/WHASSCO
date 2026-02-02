@@ -118,9 +118,9 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - explicit color for visibility in production */}
           <button
-            className="md:hidden p-2"
+            className="md:hidden p-2 text-african-black-900 hover:text-primary-600 transition-colors rounded"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -128,6 +128,7 @@ export default function Header() {
               className="w-6 h-6"
               fill="none"
               stroke="currentColor"
+              strokeWidth={2}
               viewBox="0 0 24 24"
             >
               {isMenuOpen ? (
