@@ -19,9 +19,9 @@ export default function Footer() {
               <Image
                 src="/image.png"
                 alt="WHAASCO Logo"
-                width={120}
-                height={120}
-                className="h-16 w-auto object-contain"
+                width={180}
+                height={180}
+                className="h-24 md:h-28 w-auto object-contain"
               />
             </Link>
             <p className="text-sm">
