@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -19,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={inter.className}>
-        <Header />
+        <Suspense fallback={<header className="bg-white shadow-md sticky top-0 z-50 border-b-4 border-african-gold-500 h-28" />}>
+          <Header />
+        </Suspense>
         <main className="min-h-screen animate-fade-in">{children}</main>
         <Footer />
       </body>
