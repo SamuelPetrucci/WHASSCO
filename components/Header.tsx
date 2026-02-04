@@ -2,14 +2,27 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import ContactModal from "./ContactModal";
+import JoinWHAASCOModal from "./JoinWHAASCOModal";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
+  const [isMobileAboutOpen, setIsMobileAboutOpen] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
+
+  // Open Join modal when ?join=1 is in URL (e.g. from committees page link)
+  useEffect(() => {
+    if (searchParams.get("join") === "1") {
+      setIsJoinModalOpen(true);
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, [searchParams]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -50,13 +63,13 @@ export default function Header() {
               Home
             </Link>
             
-            {/* About Dropdown */}
+            {/* About WHAASCO Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsAboutDropdownOpen(!isAboutDropdownOpen)}
                 className="text-african-black-800 hover:text-primary-600 transition-colors font-medium flex items-center"
               >
-                About
+                About WHAASCO
                 <svg
                   className={`ml-1 w-4 h-4 transition-transform ${isAboutDropdownOpen ? 'rotate-180' : ''}`}
                   fill="none"
@@ -73,7 +86,7 @@ export default function Header() {
               </button>
               
               {isAboutDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                   <Link
                     href="/about"
                     className="block px-4 py-2 text-african-black-800 hover:bg-primary-50 hover:text-primary-600 transition-colors"
@@ -88,16 +101,30 @@ export default function Header() {
                   >
                     History
                   </Link>
+                  <Link
+                    href="/board"
+                    className="block px-4 py-2 text-african-black-800 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                    onClick={() => setIsAboutDropdownOpen(false)}
+                  >
+                    Board Members
+                  </Link>
+                  <Link
+                    href="/committees"
+                    className="block px-4 py-2 text-african-black-800 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                    onClick={() => setIsAboutDropdownOpen(false)}
+                  >
+                    WHAASCO Committees
+                  </Link>
                 </div>
               )}
             </div>
 
-            <Link
-              href="/board"
+            <button
+              onClick={() => setIsJoinModalOpen(true)}
               className="text-african-black-800 hover:text-primary-600 transition-colors font-medium"
             >
-              Board Members
-            </Link>
+              Join WHAASCO
+            </button>
             <Link
               href="/gallery"
               className="text-african-black-800 hover:text-primary-600 transition-colors font-medium"
@@ -160,27 +187,37 @@ export default function Header() {
             >
               Home
             </Link>
-            <Link
-              href="/about"
-              className="block py-2 text-african-black-800 hover:text-primary-600 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
+            {/* Mobile About WHAASCO expandable */}
+            <div>
+              <button
+                onClick={() => setIsMobileAboutOpen(!isMobileAboutOpen)}
+                className="flex items-center justify-between w-full py-2 text-african-black-800 hover:text-primary-600 transition-colors text-left"
+              >
+                About WHAASCO
+                <svg
+                  className={`w-4 h-4 transition-transform ${isMobileAboutOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {isMobileAboutOpen && (
+                <div className="pl-4 space-y-1 border-l-2 border-primary-200 ml-2">
+                  <Link href="/about" className="block py-2 text-african-black-800 hover:text-primary-600" onClick={() => setIsMenuOpen(false)}>About Us</Link>
+                  <Link href="/history" className="block py-2 text-african-black-800 hover:text-primary-600" onClick={() => setIsMenuOpen(false)}>History</Link>
+                  <Link href="/board" className="block py-2 text-african-black-800 hover:text-primary-600" onClick={() => setIsMenuOpen(false)}>Board Members</Link>
+                  <Link href="/committees" className="block py-2 text-african-black-800 hover:text-primary-600" onClick={() => setIsMenuOpen(false)}>WHAASCO Committees</Link>
+                </div>
+              )}
+            </div>
+            <button
+              onClick={() => { setIsJoinModalOpen(true); setIsMenuOpen(false); }}
+              className="block w-full text-left py-2 text-african-black-800 hover:text-primary-600 transition-colors"
             >
-              About
-            </Link>
-            <Link
-              href="/history"
-              className="block py-2 text-african-black-800 hover:text-primary-600 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              History
-            </Link>
-            <Link
-              href="/board"
-              className="block py-2 text-african-black-800 hover:text-primary-600 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Board Members
-            </Link>
+              Join WHAASCO
+            </button>
             <Link
               href="/gallery"
               className="block py-2 text-african-black-800 hover:text-primary-600 transition-colors"
@@ -212,6 +249,11 @@ export default function Header() {
       <ContactModal
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
+      />
+      {/* Join WHAASCO Modal */}
+      <JoinWHAASCOModal
+        isOpen={isJoinModalOpen}
+        onClose={() => setIsJoinModalOpen(false)}
       />
     </header>
   );

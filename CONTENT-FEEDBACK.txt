@@ -1,0 +1,164 @@
+================================================================================
+WHAASCO WEBSITE — CONTENT & PHOTO FEEDBACK FORM
+================================================================================
+Use this form to send edit suggestions, photo requests, and hero image choices
+to the web team. Copy and paste your responses into an email or document.
+
+================================================================================
+SECTION 1: TEXT & COPY EDITS
+================================================================================
+
+Homepage
+--------
+- Hero slide 1 title/description: 
+- Hero slide 2 title/description: 
+- Hero slide 3 title/description: 
+- Mission statement: 
+- Any other homepage text to change: 
+
+About Us Page
+--------------
+- "Who We Are" paragraph: 
+- "Our Mission" paragraph: 
+- "Our Purpose" bullets: 
+- "Programs and Activities" section: 
+- "Community Focus" section: 
+- "Our Vision" section: 
+- Other About page edits: 
+
+History Page
+------------
+- Formation section: 
+- Community Advocacy section: 
+- Bristow Headstone section: 
+- Program Topics list: 
+- Social & Cultural Activities: 
+- Community Support list: 
+- Other History page edits: 
+
+Board Members Page
+------------------
+- Intro paragraph: 
+- "Our Board" slide text: 
+- "Community Leadership" slide text: 
+- "Get Involved" slide text: 
+
+Gallery & Events Page
+---------------------
+- Captions or descriptions for existing photos: 
+- Event names, dates, descriptions to add: 
+- Other gallery edits: 
+
+Donate Page
+-----------
+- Donation message or instructions: 
+
+Contact
+-------
+- Email address to show: 
+- Phone number(s) to show: 
+- Address or "Coming Soon" note: 
+- Other contact info: 
+
+Footer / Site-Wide
+------------------
+- Tagline or short description: 
+- Social media links (Facebook, etc.): 
+- Other footer text: 
+
+================================================================================
+SECTION 2: PHOTOS YOU WANT FEATURED
+================================================================================
+
+General
+-------
+- List any photos you want on the site and where they should go (e.g. "group
+  photo from 2023 event — About page").
+- Please provide the actual image files (or links) and the exact filename you
+  prefer (e.g. about-hero.jpg, board-event-2023.jpg).
+
+Photo 1
+- Description / caption: 
+- Where it should appear (page and section): 
+- Filename you will provide (e.g. about-hero.jpg): 
+
+Photo 2
+- Description / caption: 
+- Where it should appear: 
+- Filename: 
+
+Photo 3
+- Description / caption: 
+- Where it should appear: 
+- Filename: 
+
+(Add more as needed.)
+
+================================================================================
+SECTION 3: HERO IMAGES (BANNERS AT TOP OF PAGES)
+================================================================================
+
+Homepage Hero Carousel (3 slides)
+--------------------------------
+- Slide 1 image: describe or provide filename (e.g. hero-community.jpg)
+- Slide 2 image: 
+- Slide 3 image: 
+- If you want different text on each slide, see Section 1 "Homepage" above.
+
+About Us Page — Header Banner
+------------------------------
+- Image you want for the top banner (e.g. group photo, event photo):
+  Filename or description: 
+
+About Us Page — "Who We Are" Section Image
+-------------------------------------------
+- Image for the section under "Who We Are":
+  Filename or description: 
+
+History Page — Header Banner
+-----------------------------
+- Image for the top of the History page:
+  Filename or description: 
+
+History Page — Bristow / Legacy Section
+----------------------------------------
+- Image for the Bristow headstone / legacy section:
+  Filename or description: 
+
+Other Pages
+-----------
+- Gallery page hero/banner image (if desired): 
+- Donate page banner (if desired): 
+- Board page banner (if desired): 
+
+================================================================================
+SECTION 4: BOARD MEMBER PHOTOS (WHEN READY)
+================================================================================
+- List board member names, titles, and photo filenames when you have them.
+- Example: "Jane Doe, President — jane-doe.jpg"
+
+Board Member 1: Name, Title, Photo filename
+Board Member 2: Name, Title, Photo filename
+Board Member 3: Name, Title, Photo filename
+(Add more as needed.)
+
+================================================================================
+SECTION 5: OTHER REQUESTS
+================================================================================
+- New pages you want: 
+- Links to add (e.g. donation link, social media): 
+- Anything else: 
+
+================================================================================
+INSTRUCTIONS FOR SENDING PHOTOS
+================================================================================
+- Send image files in a format we can use: JPG or PNG.
+- Name files clearly (e.g. about-hero.jpg, history-banner.png).
+- For hero/banner images, landscape orientation and at least 1200px wide works
+  best.
+- You can reply to this form in an email and attach the photo files, or upload
+  them to a shared folder and list the filenames in the form above.
+
+================================================================================
+END OF FORM
+================================================================================

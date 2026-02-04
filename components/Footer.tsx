@@ -40,8 +40,23 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/board" className="hover:text-primary-500 transition-colors">
+                  Board Members
+                </Link>
+              </li>
+              <li>
+                <Link href="/committees" className="hover:text-primary-500 transition-colors">
+                  WHAASCO Committees
+                </Link>
+              </li>
+              <li>
                 <Link href="/programs" className="hover:text-primary-500 transition-colors">
                   Our Programs
+                </Link>
+              </li>
+              <li>
+                <Link href="/?join=1" className="hover:text-primary-500 transition-colors">
+                  Join WHAASCO
                 </Link>
               </li>
               <li>
@@ -105,8 +120,19 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-african-black-700 mt-8 pt-8 text-center text-sm">
+        <div className="border-t border-african-black-700 mt-8 pt-8 text-center text-sm space-y-1">
           <p>&copy; {currentYear} WHAASCO. All rights reserved.</p>
+          <p>
+            Designed by{" "}
+            <a
+              href="https://aitransformationllc.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-400 hover:text-primary-300 transition-colors"
+            >
+              AITransformationllc.com
+            </a>
+          </p>
         </div>
       </div>
       

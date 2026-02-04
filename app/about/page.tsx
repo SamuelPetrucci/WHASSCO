@@ -92,7 +92,7 @@ export default function AboutPage() {
                   href="/donate"
                   className="bg-white text-primary-600 border-2 border-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors text-center"
                 >
-                  Support Our Mission
+                  Donate
                 </a>
               </div>
             </div>
