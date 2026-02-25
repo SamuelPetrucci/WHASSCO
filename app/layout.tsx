@@ -7,9 +7,24 @@ import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://whaasco.org";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "WHAASCO - West Hartford African American Social & Cultural Organization",
   description: "WHAASCO empowers families, supports youth, and celebrates African American culture through education, connection, and community engagement.",
+  openGraph: {
+    title: "WHAASCO - West Hartford African American Social & Cultural Organization",
+    description: "WHAASCO empowers families, supports youth, and celebrates African American culture through education, connection, and community engagement.",
+    images: ["/image.png"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "WHAASCO - West Hartford African American Social & Cultural Organization",
+    description: "WHAASCO empowers families, supports youth, and celebrates African American culture through education, connection, and community engagement.",
+    images: ["/image.png"],
+  },
 };
 
 export default function RootLayout({

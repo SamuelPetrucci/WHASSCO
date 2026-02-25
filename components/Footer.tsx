@@ -25,8 +25,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-sm">
-              Making a positive impact in our community through dedicated service
-              and meaningful programs.
+              WHAASCO empowers families, supports youth, and celebrates African American culture through education, connection, and community engagement.
             </p>
           </div>
 
@@ -80,8 +79,8 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm">
               <li>Email: info@whaasco.org</li>
-              <li>Phone: (555) 123-4567</li>
-              <li>Address: Coming Soon</li>
+              <li>Phone: TBD</li>
+              <li>PO Box 370024, West Hartford, CT 06137-0024</li>
             </ul>
           </div>
 
@@ -90,7 +89,9 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-4">Follow Us</h4>
             <div className="flex space-x-4">
               <a
-                href="#"
+                href="https://www.facebook.com/WHAASCO"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors"
                 aria-label="Facebook"
               >

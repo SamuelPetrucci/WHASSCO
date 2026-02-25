@@ -15,7 +15,7 @@ export default function AboutPage() {
             About WHAASCO
           </h1>
           <p className="text-lg md:text-xl text-white/90 mt-2 max-w-2xl mx-auto">
-            Supporting families, uplifting youth, and celebrating African American culture.
+            Empowering families, supporting youth, and celebrating African American culture through education and community.
           </p>
         </div>
       </div>
@@ -78,8 +78,7 @@ export default function AboutPage() {
             <div className="mt-12 bg-primary-50 p-6 rounded-lg">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Get Involved</h2>
               <p className="text-gray-700 mb-4">
-                Interested in learning more about WHAASCO or getting involved? We
-                welcome community members who share our vision and values.
+                Your support helps WHAASCO strengthen families, empower youth, and celebrate African American culture. By giving your time, resources, or financial support, you help us provide educational enrichment, cultural programming, and community connections that make a lasting impact.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <a

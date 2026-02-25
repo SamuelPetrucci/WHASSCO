@@ -84,11 +84,22 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Phone</h3>
-                  <p className="text-gray-700">(555) 123-4567</p>
+                  <p className="text-gray-700">TBD</p>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Address</h3>
-                  <p className="text-gray-700">Coming Soon</p>
+                  <p className="text-gray-700">
+                    PO Box 370024<br />
+                    West Hartford, CT 06137-0024
+                  </p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Follow Us</h3>
+                  <p className="text-gray-700">
+                    <a href="https://www.facebook.com/WHAASCO" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 font-medium">Facebook</a>
+                    {". "}
+                    Twitter/X and Instagram links coming soon.
+                  </p>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Office Hours</h3>

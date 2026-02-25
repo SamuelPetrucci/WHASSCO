@@ -146,9 +146,10 @@ export default function DonatePage() {
               Other Ways to Give
             </h3>
             <ul className="space-y-2 text-gray-700">
-              <li>• Mail a check to our office</li>
+              <li>• Donate online via Zeffy (link coming soon)</li>
+              <li>• Mail a check to our office (PO Box 370024, West Hartford, CT 06137-0024)</li>
               <li>• Set up a recurring monthly donation</li>
-              <li>• Donate through your employer's matching program</li>
+              <li>• Donate through your employer&apos;s matching program</li>
               <li>• Volunteer your time and skills</li>
             </ul>
           </div>

@@ -200,6 +200,44 @@ export default function HistoryPage() {
             </div>
           </section>
 
+          {/* Tribute to Earl Exum */}
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 border-b-4 border-primary-500 pb-2">
+              A Tribute to Earl Exum
+            </h2>
+            <div className="bg-white p-8 rounded-lg shadow-md border-l-4 border-african-gold-500">
+              <p className="text-lg text-gray-700 mb-4 leading-relaxed">
+                WHAASCO honors our past president <strong>Earl Exum</strong>, who served until his passing in October 2023. An Igbo proverb embodied Earl: &ldquo;If a man cooks for his community, his community will finish the food, but if a community cooks for a man, he can never finish the food.&rdquo;—the greater good of the community was always above that of one person.
+              </p>
+              <p className="text-gray-700 mb-4 font-medium">His community reach as WHAASCO&apos;s leader and beyond included:</p>
+              <ul className="space-y-2 text-gray-700 mb-4">
+                <li className="flex items-start">
+                  <span className="text-primary-600 mr-2">•</span>
+                  <span>Growing WHAASCO membership and broadening community engagement; instrumental in bringing <strong>United with Jazz</strong> to fruition with the West Hartford Police Department and the Town, bridging community and police in a social setting.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-primary-600 mr-2">•</span>
+                  <span>Advocating for a memorial honoring <strong>Lemuel Haynes</strong> on the grounds of First Church on the town green, fostering inclusive engagement by educating residents on the accomplishments of an African American man born in West Hartford in 1755.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-primary-600 mr-2">•</span>
+                  <span>His passion for the <strong>Tuskegee Airmen</strong> helped establish their exhibit at the New England Air Museum, connecting aviation history with the contributions of Black airmen.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-primary-600 mr-2">•</span>
+                  <span>Connecting with <strong>Howard University</strong> and serving on the board of advisors for the Howard University Business School, mentoring future leaders and advancing DE&I in leadership.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-primary-600 mr-2">•</span>
+                  <span>Earl was to be installed on the Board of the Hartford Foundation for Public Giving later in 2023.</span>
+                </li>
+              </ul>
+              <p className="text-gray-700 italic">
+                &ldquo;Let us be the people of tomorrow.&rdquo; Earl had endless hope for better communities—we carry that hope forward.
+              </p>
+            </div>
+          </section>
+
           {/* Vision Statement */}
           <section className="mb-12">
             <div className="bg-african-gradient-vertical text-white p-8 rounded-lg shadow-lg">
@@ -211,6 +249,7 @@ export default function HistoryPage() {
           </section>
 
           {/* CTA */}
+          <p className="text-sm text-gray-500 mb-6 text-right">Compiled by E.D. / February 2024</p>
           <div className="text-center">
             <Link
               href="/about"
