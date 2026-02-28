@@ -55,7 +55,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/?join=1" className="hover:text-primary-500 transition-colors">
-                  Join WHAASCO
+                  Interested in WHAASCO
                 </Link>
               </li>
               <li>

@@ -7,23 +7,11 @@ interface JoinWHAASCOModalProps {
   onClose: () => void;
 }
 
-const INTEREST_OPTIONS = [
-  "Board membership",
-  "Committee volunteer",
-  "Event planning",
-  "Youth programs",
-  "Education initiatives",
-  "Cultural events",
-  "Community outreach",
-  "Other",
-];
-
 export default function JoinWHAASCOModal({ isOpen, onClose }: JoinWHAASCOModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    interests: [] as string[],
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,15 +39,6 @@ export default function JoinWHAASCOModal({ isOpen, onClose }: JoinWHAASCOModalPr
     };
   }, [isOpen]);
 
-  const handleInterestToggle = (option: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      interests: prev.interests.includes(option)
-        ? prev.interests.filter((i) => i !== option)
-        : [...prev.interests, option],
-    }));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -83,7 +62,6 @@ export default function JoinWHAASCOModal({ isOpen, onClose }: JoinWHAASCOModalPr
           name: "",
           email: "",
           phone: "",
-          interests: [],
           message: "",
         });
         setTimeout(() => {
@@ -150,10 +128,10 @@ export default function JoinWHAASCOModal({ isOpen, onClose }: JoinWHAASCOModalPr
         <div className="p-6 md:p-8">
           <div className="mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-              Join WHAASCO
+              Interested in WHAASCO
             </h2>
             <p className="text-gray-600">
-              Share your interest and we'll connect you with opportunities to get involved—whether as a volunteer, committee member, or supporter.
+              Share your contact information and tell us more about your interest in WHAASCO. We&apos;ll follow up with ways to get involved.
             </p>
           </div>
 
@@ -227,33 +205,11 @@ export default function JoinWHAASCOModal({ isOpen, onClose }: JoinWHAASCOModalPr
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                I'm interested in (select all that apply)
-              </label>
-              <div className="space-y-2">
-                {INTEREST_OPTIONS.map((option) => (
-                  <label
-                    key={option}
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={formData.interests.includes(option)}
-                      onChange={() => handleInterestToggle(option)}
-                      className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-600"
-                    />
-                    <span className="text-gray-700">{option}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div>
               <label
                 htmlFor="join-message"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Tell us more (optional)
+                Tell us more about why you&apos;re interested
               </label>
               <textarea
                 id="join-message"
@@ -262,7 +218,8 @@ export default function JoinWHAASCOModal({ isOpen, onClose }: JoinWHAASCOModalPr
                 onChange={handleChange}
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all resize-none"
-                placeholder="Skills, availability, or questions..."
+                placeholder="Tell us a bit about yourself, your interests, or any questions you have..."
+                required
               />
             </div>
 

@@ -11,6 +11,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,7 +64,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           type: "success",
           message: data.message || "Thank you for your message! We'll get back to you soon.",
         });
-        setFormData({ name: "", email: "", message: "" });
+        setFormData({ name: "", email: "", phone: "", message: "" });
         // Auto-close after 3 seconds on success
         setTimeout(() => {
           onClose();
@@ -137,7 +138,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
               Contact Us
             </h2>
             <p className="text-gray-600">
-              We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+              Share your contact information and tell us more about why you&apos;re interested in WHAASCO. We&apos;ll follow up as soon as possible.
             </p>
           </div>
 
@@ -196,10 +197,28 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
             <div>
               <label
+                htmlFor="modal-phone"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Phone
+              </label>
+              <input
+                type="tel"
+                id="modal-phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all"
+                placeholder="(555) 123-4567"
+              />
+            </div>
+
+            <div>
+              <label
                 htmlFor="modal-message"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Message
+                Tell us more about why you&apos;re interested
               </label>
               <textarea
                 id="modal-message"
@@ -209,7 +228,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 required
                 rows={5}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all resize-none"
-                placeholder="Your message..."
+                placeholder="Share a bit about your interest or any questions you have..."
               />
             </div>
 

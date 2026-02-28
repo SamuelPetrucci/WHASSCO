@@ -3,16 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, interests, message } = body;
+    const { name, email, phone, message } = body;
 
-    if (!name || !email) {
+    if (!name || !email || !message) {
       return NextResponse.json(
-        { error: "Name and email are required" },
+        { error: "Name, email, and why you're interested are required" },
         { status: 400 }
       );
     }
-
-    const interestsList = Array.isArray(interests) ? interests.join(", ") : interests || "";
 
     const emailContent = {
       to: process.env.CONTACT_EMAIL || "info@whaasco.org",
@@ -24,7 +22,6 @@ export async function POST(request: NextRequest) {
         Name: ${name}
         Email: ${email}
         Phone: ${phone || "Not provided"}
-        Interests: ${interestsList || "Not specified"}
         Message: ${message || "None"}
       `,
       html: `
@@ -32,7 +29,6 @@ export async function POST(request: NextRequest) {
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-        <p><strong>Interests:</strong> ${interestsList || "Not specified"}</p>
         <p><strong>Message:</strong></p>
         <p>${(message || "None").replace(/\n/g, "<br>")}</p>
       `,

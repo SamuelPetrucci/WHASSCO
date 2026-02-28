@@ -55,28 +55,36 @@ export default function BoardCarousel({ slides, className = "" }: BoardCarouselP
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      <div
-        className="flex transition-transform duration-300 ease-out touch-pan-y"
-        style={{ transform: `translateX(-${current * 100}%)` }}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        {slides.map((slide) => (
-          <div
-            key={slide.name}
-            className="w-full flex-shrink-0 px-2 md:px-4"
-            style={{ minWidth: "100%", maxWidth: "100%" }}
-          >
-            <BoardMemberCard
-              name={slide.name}
-              title={slide.title}
-              image={slide.image}
-              bio={slide.bio}
-              className="max-w-sm mx-auto"
-            />
-          </div>
-        ))}
+      {/* Fixed height so cards don't collapse; cards are centered rounded squares */}
+      <div className="min-h-[300px] sm:min-h-[340px] md:min-h-[380px] flex items-center">
+        <div
+          className="flex transition-transform duration-300 ease-out touch-pan-y w-full"
+          style={{ transform: `translateX(-${current * 100}%)` }}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
+          {slides.map((slide) => (
+            <div
+              key={slide.name}
+              className="w-full flex-shrink-0 flex justify-center items-center px-4"
+              style={{ minWidth: "100%", maxWidth: "100%" }}
+            >
+              <div
+                className="w-[260px] h-[260px] sm:w-[300px] sm:h-[300px] md:w-[320px] md:h-[320px] rounded-2xl overflow-hidden shadow-xl flex-shrink-0"
+                style={{ perspective: "1000px" }}
+              >
+                <BoardMemberCard
+                  name={slide.name}
+                  title={slide.title}
+                  image={slide.image}
+                  bio={slide.bio}
+                  fillContainer
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {slides.length > 1 && (

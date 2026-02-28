@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, message } = body;
+    const { name, email, phone, message } = body;
 
     // Validate required fields
     if (!name || !email || !message) {
       return NextResponse.json(
-        { error: "All fields are required" },
+        { error: "Name, email, and why you're interested are required" },
         { status: 400 }
       );
     }
@@ -19,18 +19,20 @@ export async function POST(request: NextRequest) {
     const emailContent = {
       to: process.env.CONTACT_EMAIL || "info@whaasco.org",
       from: process.env.FROM_EMAIL || "noreply@whaasco.org",
-      subject: `New Contact Form Submission from ${name}`,
+      subject: `New Contact / Interest Form Submission from ${name}`,
       text: `
-        New contact form submission:
+        New contact / interest form submission:
         
         Name: ${name}
         Email: ${email}
+        Phone: ${phone || "Not provided"}
         Message: ${message}
       `,
       html: `
-        <h2>New Contact Form Submission</h2>
+        <h2>New Contact / Interest Form Submission</h2>
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
         <p><strong>Message:</strong></p>
         <p>${message.replace(/\n/g, "<br>")}</p>
       `,

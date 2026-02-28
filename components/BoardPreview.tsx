@@ -6,17 +6,17 @@ import ScrollAnimation from "./ScrollAnimation";
 import type { BoardSlide } from "./BoardCarousel";
 import BoardCarousel from "./BoardCarousel";
 
-const BOARD_MEMBERS: { name: string; title: string; bio?: string }[] = [
-  { name: "Kaleea Alston-Griffin", title: "President", bio: "Kaleea leads WHAASCO with a focus on family engagement and community partnerships. She is committed to creating inclusive spaces where youth and families can thrive and connect with African American heritage and culture." },
-  { name: "Portia Wise Bachman", title: "Vice President", bio: "Portia brings experience in education and community organizing to her role. She works to strengthen WHAASCO's programs and support the next generation of leaders in West Hartford and beyond." },
-  { name: "Bjorn Burke", title: "Treasurer", bio: "Bjorn oversees the organization's finances and helps ensure resources go directly to programs that support families and youth. He is dedicated to transparency and sustainable growth for WHAASCO." },
-  { name: "Gayle Hooker", title: "Recording Secretary", bio: "Gayle keeps our meetings and records organized and helps the board communicate clearly with members and the community. Her attention to detail supports WHAASCO's day-to-day operations." },
-  { name: "Karen Anderson", title: "Corresponding Secretary", bio: "Karen manages outreach and correspondence, connecting WHAASCO with families, partners, and the wider community. She helps share our mission and keep everyone informed and engaged." },
+const BOARD_MEMBERS: { name: string; title: string }[] = [
+  { name: "Kaleea Alston-Griffin", title: "President" },
+  { name: "Portia Wise Bachman", title: "Vice President" },
+  { name: "Bjorn Burke", title: "Treasurer" },
+  { name: "Gayle Hooker", title: "Recording Secretary" },
+  { name: "Karen Anderson", title: "Corresponding Secretary" },
 ];
 
 export default function BoardPreview() {
   const previewSlides: BoardSlide[] = useMemo(
-    () => BOARD_MEMBERS.map((m) => ({ name: m.name, title: m.title, bio: m.bio ?? null })),
+    () => BOARD_MEMBERS.map((m) => ({ name: m.name, title: m.title })),
     []
   );
 

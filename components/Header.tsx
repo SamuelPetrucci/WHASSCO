@@ -102,6 +102,13 @@ export default function Header() {
                     History
                   </Link>
                   <Link
+                    href="/earl-exum-tribute"
+                    className="block px-4 py-2 text-african-black-800 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                    onClick={() => setIsAboutDropdownOpen(false)}
+                  >
+                    Tribute to President Earl Exum
+                  </Link>
+                  <Link
                     href="/board"
                     className="block px-4 py-2 text-african-black-800 hover:bg-primary-50 hover:text-primary-600 transition-colors"
                     onClick={() => setIsAboutDropdownOpen(false)}
@@ -123,7 +130,7 @@ export default function Header() {
               onClick={() => setIsJoinModalOpen(true)}
               className="text-african-black-800 hover:text-primary-600 transition-colors font-medium"
             >
-              Join WHAASCO
+              Interested in WHAASCO
             </button>
             <Link
               href="/gallery"
@@ -207,6 +214,7 @@ export default function Header() {
                 <div className="pl-4 space-y-1 border-l-2 border-primary-200 ml-2">
                   <Link href="/about" className="block py-2 text-african-black-800 hover:text-primary-600" onClick={() => setIsMenuOpen(false)}>About Us</Link>
                   <Link href="/history" className="block py-2 text-african-black-800 hover:text-primary-600" onClick={() => setIsMenuOpen(false)}>History</Link>
+                  <Link href="/earl-exum-tribute" className="block py-2 text-african-black-800 hover:text-primary-600" onClick={() => setIsMenuOpen(false)}>Tribute to President Earl Exum</Link>
                   <Link href="/board" className="block py-2 text-african-black-800 hover:text-primary-600" onClick={() => setIsMenuOpen(false)}>Board Members</Link>
                   <Link href="/committees" className="block py-2 text-african-black-800 hover:text-primary-600" onClick={() => setIsMenuOpen(false)}>WHAASCO Committees</Link>
                 </div>
@@ -216,7 +224,7 @@ export default function Header() {
               onClick={() => { setIsJoinModalOpen(true); setIsMenuOpen(false); }}
               className="block w-full text-left py-2 text-african-black-800 hover:text-primary-600 transition-colors"
             >
-              Join WHAASCO
+              Interested in WHAASCO
             </button>
             <Link
               href="/gallery"

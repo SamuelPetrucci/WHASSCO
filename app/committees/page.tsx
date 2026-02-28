@@ -72,7 +72,7 @@ export default function CommitteesPage() {
               href="/committees?join=1"
               className="inline-block bg-african-gradient text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all shadow-md"
             >
-              Join WHAASCO
+              Interested in WHAASCO
             </Link>
             <p className="text-sm text-gray-600 mt-3">
               Click above to open our interest form, or <Link href="/contact" className="text-primary-600 hover:text-primary-700 font-semibold">contact us</Link> directly.
