@@ -17,7 +17,7 @@ export default function Footer() {
           <div>
             <Link href="/" className="inline-block mb-4">
               <Image
-                src="/image.png"
+                src="/logo.png"
                 alt="WHAASCO Logo"
                 width={180}
                 height={180}

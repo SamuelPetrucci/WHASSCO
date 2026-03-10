@@ -8,8 +8,8 @@ This guide ties your **content feedback form** to concrete changes and gives dir
 
 **Done.** When someone shares the site (text, social, messaging apps), the preview now uses **your organization logo**.
 
-- **Technical:** Open Graph and Twitter Card metadata in `app/layout.tsx` point to `/image.png`.
-- **What you need:** Place your logo at **`public/image.png`** (same file used in the header). For best previews on social/media, use a square or 1200×630px image; the logo should be clear and centered.
+- **Technical:** Open Graph and Twitter Card metadata in `app/layout.tsx` point to `/logo.png`.
+- **What you need:** Place your logo at **`public/logo.png`** (same file used in the header). For best previews on social/media, use a square or 1200×630px image; the logo should be clear and centered.
 - **Production URL:** Set `NEXT_PUBLIC_SITE_URL` in your hosting env (e.g. `https://yoursite.org`) so preview images resolve correctly.
 
 ---
@@ -64,7 +64,7 @@ Send the filled form plus the actual image files (or links) to the web team so c
 
 ## 4. Why photos and logo may not show in production
 
-- **Logo (`/image.png`):** The header, footer, and share preview (Open Graph/Twitter) all use **`public/image.png`**. That file is **not in the repo** right now, so production gets a 404. **Fix:** Add your WHAASCO logo to the project as **`public/image.png`**, then commit and push so it deploys. Use a square or 1200×630px image for best results.
+- **Logo (`/logo.png`):** The header, footer, and share preview (Open Graph/Twitter) all use **`public/logo.png`**. That file is **not in the repo** right now, so production gets a 404. **Fix:** Add your WHAASCO logo to the project as **`public/logo.png`**, then commit and push so it deploys. Use a square or 1200×630px image for best results.
 - **Hero image filename:** The first and third hero slides used a file named `hero image.png` (with a space). Spaces in filenames can break on production (Linux). This has been fixed: the file is now **`public/hero-image.png`** and the code has been updated.
 - **Share preview URL:** For link previews to show the correct image when shared, set **`NEXT_PUBLIC_SITE_URL`** in your hosting environment (e.g. `https://whaasco.org`) so the full image URL is correct.
 
@@ -72,7 +72,7 @@ Send the filled form plus the actual image files (or links) to the web team so c
 
 ## 5. Quick checklist before launch
 
-- [ ] Logo at `public/image.png` (and optional 1200×630 version for best share previews).
+- [ ] Logo at `public/logo.png` (and optional 1200×630 version for best share previews).
 - [ ] `NEXT_PUBLIC_SITE_URL` set in production.
 - [ ] CONTENT-FEEDBACK form filled for all sections you care about.
 - [ ] Hero carousel: 3 images + short titles/descriptions.
@@ -85,7 +85,7 @@ Send the filled form plus the actual image files (or links) to the web team so c
 
 ## 6. Summary
 
-- **Share preview:** Uses your logo; ensure `public/image.png` exists and `NEXT_PUBLIC_SITE_URL` is set.
+- **Share preview:** Uses your logo; ensure `public/logo.png` exists and `NEXT_PUBLIC_SITE_URL` is set.
 - **Feedback:** Use `CONTENT-FEEDBACK.txt` as the single place to list all text, photo, and hero choices.
 - **Appeal:** More real photos (especially heroes and About/History), light transitions, short and scannable copy, one clear CTA per page.
 - **Essence:** Warm, community- and culture-focused; show people and events, and keep copy tight so the organization’s impact and identity come through without overload.

@@ -16,14 +16,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "WHAASCO - West Hartford African American Social & Cultural Organization",
     description: "WHAASCO empowers families, supports youth, and celebrates African American culture through education, connection, and community engagement.",
-    images: ["/image.png"],
+    images: ["/logo.png"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "WHAASCO - West Hartford African American Social & Cultural Organization",
     description: "WHAASCO empowers families, supports youth, and celebrates African American culture through education, connection, and community engagement.",
-    images: ["/image.png"],
+    images: ["/logo.png"],
   },
 };
 

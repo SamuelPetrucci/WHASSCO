@@ -45,7 +45,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center md:ml-8">
             <Image
-              src="/image.png"
+              src="/logo.png"
               alt="WHAASCO Logo"
               width={240}
               height={240}
