@@ -52,7 +52,7 @@ const slides: Slide[] = [
     id: 4,
     title: "Rooted in West Hartford",
     description: "From the flagpoles to the stone wall, WHAASCO’s work is grounded in the West Hartford community we call home.",
-    image: "/images/hero/west-hartford-flagpoles.jpg",
+    image: "/westhartfordlogosign.png",
     primaryButtonText: "About WHAASCO",
     primaryButtonLink: "/about",
     secondaryButtonText: "Gallery & Events",
