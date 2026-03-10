@@ -78,9 +78,12 @@ const config: Config = {
         },
       },
       backgroundImage: {
-        'african-gradient': 'linear-gradient(135deg, #00843d 0%, #ce1126 50%, #000000 100%)',
-        'african-gradient-vertical': 'linear-gradient(180deg, #00843d 0%, #ce1126 33%, #000000 66%, #d4af37 100%)',
-        'logo-gold-border': 'linear-gradient(90deg, #d4af37 0%, #e5c84d 50%, #d4af37 100%)',
+        "african-gradient":
+          "linear-gradient(135deg, #005328 0%, #002614 100%)",
+        "african-gradient-vertical":
+          "linear-gradient(180deg, #005328 0%, #002614 100%)",
+        "logo-gold-border":
+          "linear-gradient(90deg, #d4af37 0%, #e5c84d 50%, #d4af37 100%)",
       },
     },
   },
