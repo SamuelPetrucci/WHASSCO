@@ -1,15 +1,20 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AboutPage() {
   return (
     <div className="bg-gray-50">
-      {/* Hero - placeholder for your photo */}
-      <div className="relative w-full h-64 md:h-80 lg:h-96 bg-gradient-to-br from-primary-600 via-primary-500 to-african-gold-500 flex flex-col items-center justify-center px-6">
-        <div className="absolute inset-0 flex items-center justify-center border-2 border-dashed border-white/30 rounded-lg m-4">
-          <p className="text-white/70 text-sm md:text-base text-center max-w-md">
-            Add your header photo — place image in <code className="bg-white/20 px-1 rounded">public/about-hero.jpg</code> and update this component
-          </p>
-        </div>
+      {/* Hero */}
+      <div className="relative w-full h-64 md:h-80 lg:h-96 flex flex-col items-center justify-center px-6 overflow-hidden">
+        <Image
+          src="/images/hero/communitygardenimage.webp"
+          alt="WHAASCO community"
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-700/80 via-primary-600/70 to-african-gold-600/60" />
         <div className="relative z-10 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
             About WHAASCO
@@ -24,10 +29,14 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto">
           <div className="prose prose-lg max-w-none">
             <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Who We Are</h2>
-            <div className="rounded-xl overflow-hidden shadow-lg my-6 aspect-video max-w-2xl relative bg-primary-100 border-2 border-dashed border-primary-300 flex items-center justify-center">
-              <p className="text-primary-700/80 text-sm md:text-base text-center p-6">
-                Add your photo — place image in <code className="bg-white/80 px-1.5 py-0.5 rounded">public/about-community.jpg</code> and update this component
-              </p>
+            <div className="rounded-xl overflow-hidden shadow-lg my-6 aspect-video max-w-2xl relative">
+              <Image
+                src="/images/hero/heroimage.webp"
+                alt="WHAASCO community and families"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 672px"
+              />
             </div>
             <p className="text-lg text-gray-700 mb-6">
               We, the members of the <strong>West Hartford African American Social and Cultural Organization (WHAASCO)</strong>, are a non-profit organization established to support, encourage, and enhance the social, cultural, and educational well-being of African American families and the broader community.

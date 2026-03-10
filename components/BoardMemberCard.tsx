@@ -123,8 +123,8 @@ export default function BoardMemberCard({
               {bio && bio.trim() ? (
                 <p className={fillContainer ? "text-xs" : "text-base"}>{bio}</p>
               ) : (
-                <p className="text-gray-500 italic text-sm">
-                  More about {name.split(" ")[0]} coming soon.
+                <p className="text-gray-500 text-sm">
+                  Bio not yet available.
                 </p>
               )}
             </div>

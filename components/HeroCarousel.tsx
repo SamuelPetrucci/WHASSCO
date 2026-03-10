@@ -22,7 +22,7 @@ const slides: Slide[] = [
     id: 1,
     title: "Empowering Families, Supporting Youth, Celebrating Culture",
     description: "Empowering families, supporting youth, and celebrating African American culture through education and community.",
-    image: "/hero-image.png",
+    image: "/images/hero/heroimage.webp",
     primaryButtonText: "Donate Now",
     primaryButtonLink: "/donate",
     secondaryButtonText: "Learn More",
@@ -32,7 +32,7 @@ const slides: Slide[] = [
     id: 2,
     title: "Building Strong Communities Together",
     description: "Since 1979, we've been dedicated to strengthening families, supporting children, and fostering pride in African American heritage and history.",
-    image: "/heroimg3.png",
+    image: "/images/hero/communitygardenimage.webp",
     primaryButtonText: "Get Involved",
     primaryButtonLink: "/contact",
     secondaryButtonText: "Our Programs",
@@ -42,7 +42,7 @@ const slides: Slide[] = [
     id: 3,
     title: "Celebrating Heritage, Creating Impact",
     description: "Join us in promoting unity, cultural awareness, and community involvement through programs that make a lasting difference.",
-    image: "/hero-image.png",
+    image: "/images/hero/hero%20image.avif",
     primaryButtonText: "View History",
     primaryButtonLink: "/history",
     secondaryButtonText: "See Events",
@@ -111,21 +111,21 @@ export default function HeroCarousel() {
 
   return (
     <section
-      className="relative h-[600px] md:h-[700px] overflow-hidden touch-pan-y"
+      className="relative w-full overflow-hidden touch-pan-y min-h-[58vh] sm:min-h-[52vh] md:h-[620px] lg:h-[680px]"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
       {/* Decorative Pan-African stripe pattern */}
       <div className="absolute top-0 left-0 right-0 h-2 flex z-30">
-        <div className="flex-1 bg-african-green-500"></div>
-        <div className="flex-1 bg-african-red-500"></div>
-        <div className="flex-1 bg-african-black-900"></div>
-        <div className="flex-1 bg-african-gold-500"></div>
+        <div className="flex-1 bg-african-green-500" />
+        <div className="flex-1 bg-african-red-500" />
+        <div className="flex-1 bg-african-black-900" />
+        <div className="flex-1 bg-african-gold-500" />
       </div>
 
-      {/* Carousel Slides */}
-      <div className="relative w-full h-full">
+      {/* Carousel slides — full bleed, object-cover + object-center = no stretch */}
+      <div className="absolute inset-0">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
@@ -133,110 +133,99 @@ export default function HeroCarousel() {
               index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
             }`}
           >
-            {/* Background Image with Overlay */}
             <div className="absolute inset-0">
               <Image
                 src={slide.image}
                 alt={slide.title}
                 fill
-                className="object-cover"
+                className="object-cover object-center"
                 priority={index === 0}
                 quality={90}
                 sizes="100vw"
               />
-              {/* Overlay for better text readability */}
-              <div className="absolute inset-0 bg-african-gradient-vertical opacity-70"></div>
-            </div>
-
-            {/* Content */}
-            <div className="relative z-20 h-full flex items-center">
-              <div className="container mx-auto px-4">
-                <div
-                  className={`max-w-3xl mx-auto text-center text-white transition-all duration-700 ${
-                    index === currentSlide
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-10"
-                  }`}
-                >
-                  <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">
-                    {slide.title}
-                  </h1>
-                  <p className="text-xl md:text-2xl mb-8 text-white/90 drop-shadow-md">
-                    {slide.description}
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link
-                      href={slide.primaryButtonLink}
-                      className="bg-african-gold-500 text-african-black-900 px-8 py-4 rounded-lg font-semibold hover:bg-african-gold-400 transition-all duration-300 shadow-lg transform hover:scale-105 active:scale-95"
-                    >
-                      {slide.primaryButtonText}
-                    </Link>
-                    {slide.secondaryButtonText && slide.secondaryButtonLink && (
-                      <Link
-                        href={slide.secondaryButtonLink}
-                        className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-all duration-300 transform hover:scale-105 active:scale-95"
-                      >
-                        {slide.secondaryButtonText}
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <div className="absolute inset-0 bg-african-gradient-vertical opacity-70" />
             </div>
           </div>
         ))}
       </div>
 
-      {/* Bottom bar: arrows + slide indicator + dots (no overlap with hero text) */}
-      <div className="absolute bottom-6 left-0 right-0 z-30 flex items-center justify-between px-4 md:px-8">
+      {/* Content — single block for current slide, responsive type and padding for mobile */}
+      {(() => {
+        const slide = slides[currentSlide];
+        return (
+          <div className="relative z-20 h-full min-h-[58vh] sm:min-h-[52vh] md:min-h-0 md:h-full flex items-center">
+            <div className="container mx-auto px-4 py-12 sm:py-16 md:py-0 md:flex md:items-center w-full">
+              <div className="max-w-3xl mx-auto text-center text-white">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 md:mb-6 drop-shadow-lg leading-tight">
+                  {slide.title}
+                </h1>
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-5 sm:mb-6 md:mb-8 text-white/90 drop-shadow-md line-clamp-3 sm:line-clamp-none">
+                  {slide.description}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                  <Link
+                    href={slide.primaryButtonLink}
+                    className="bg-african-gold-500 text-african-black-900 px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-semibold hover:bg-african-gold-400 transition-all duration-300 shadow-lg active:scale-95 text-sm sm:text-base"
+                  >
+                    {slide.primaryButtonText}
+                  </Link>
+                  {slide.secondaryButtonText && slide.secondaryButtonLink && (
+                    <Link
+                      href={slide.secondaryButtonLink}
+                      className="bg-transparent border-2 border-white text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-all duration-300 active:scale-95 text-sm sm:text-base"
+                    >
+                      {slide.secondaryButtonText}
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Bottom bar */}
+      <div className="absolute bottom-4 sm:bottom-6 left-0 right-0 z-30 flex items-center justify-between px-3 sm:px-6 md:px-8">
         <button
           onClick={prevSlide}
-          className="bg-white/25 hover:bg-white/40 text-white p-2.5 rounded-full transition-all duration-300 backdrop-blur-sm shrink-0"
+          className="bg-white/25 hover:bg-white/40 text-white p-2 sm:p-2.5 rounded-full transition-all duration-300 backdrop-blur-sm shrink-0"
           aria-label="Previous slide"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-
-        <div className="flex flex-col items-center gap-1.5">
-          <span className="text-white/90 text-sm font-medium">
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-white/90 text-xs sm:text-sm font-medium">
             {currentSlide + 1} of {slides.length}
           </span>
-          <div className="flex gap-2">
-            {slides.map((_, index) => (
+          <div className="flex gap-1.5 sm:gap-2">
+            {slides.map((_, i) => (
               <button
-                key={index}
-                onClick={() => goToSlide(index)}
+                key={i}
+                onClick={() => goToSlide(i)}
                 className={`transition-all duration-300 rounded-full ${
-                  index === currentSlide
-                    ? "w-8 h-2.5 bg-white"
-                    : "w-2.5 h-2.5 bg-white/50 hover:bg-white/75"
+                  currentSlide === i ? "w-6 sm:w-8 h-2 sm:h-2.5 bg-white" : "w-2 h-2 sm:w-2.5 sm:h-2.5 bg-white/50 hover:bg-white/75"
                 }`}
-                aria-label={`Go to slide ${index + 1}`}
+                aria-label={`Go to slide ${i + 1}`}
               />
             ))}
           </div>
         </div>
-
         <button
           onClick={nextSlide}
-          className="bg-white/25 hover:bg-white/40 text-white p-2.5 rounded-full transition-all duration-300 backdrop-blur-sm shrink-0"
+          className="bg-white/25 hover:bg-white/40 text-white p-2 sm:p-2.5 rounded-full transition-all duration-300 backdrop-blur-sm shrink-0"
           aria-label="Next slide"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
 
-      {/* Bottom Wave SVG */}
+      {/* Bottom wave */}
       <div className="absolute bottom-0 left-0 right-0 z-20">
-        <svg
-          className="w-full h-12 fill-white"
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
-        >
+        <svg className="w-full h-8 sm:h-10 md:h-12 fill-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
           <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" />
         </svg>
       </div>

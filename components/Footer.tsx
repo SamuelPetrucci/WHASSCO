@@ -79,7 +79,6 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm">
               <li>Email: info@whaasco.org</li>
-              <li>Phone: TBD</li>
               <li>PO Box 370024, West Hartford, CT 06137-0024</li>
             </ul>
           </div>
