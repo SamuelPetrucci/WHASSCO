@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "WHAASCO - West Hartford African American Social & Cultural Organization",
   description: "WHAASCO empowers families, supports youth, and celebrates African American culture through education, connection, and community engagement.",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
   openGraph: {
     title: "WHAASCO - West Hartford African American Social & Cultural Organization",
     description: "WHAASCO empowers families, supports youth, and celebrates African American culture through education, connection, and community engagement.",
