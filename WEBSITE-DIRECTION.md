@@ -62,7 +62,15 @@ Send the filled form plus the actual image files (or links) to the web team so c
 
 ---
 
-## 4. Quick checklist before launch
+## 4. Why photos and logo may not show in production
+
+- **Logo (`/image.png`):** The header, footer, and share preview (Open Graph/Twitter) all use **`public/image.png`**. That file is **not in the repo** right now, so production gets a 404. **Fix:** Add your WHAASCO logo to the project as **`public/image.png`**, then commit and push so it deploys. Use a square or 1200×630px image for best results.
+- **Hero image filename:** The first and third hero slides used a file named `hero image.png` (with a space). Spaces in filenames can break on production (Linux). This has been fixed: the file is now **`public/hero-image.png`** and the code has been updated.
+- **Share preview URL:** For link previews to show the correct image when shared, set **`NEXT_PUBLIC_SITE_URL`** in your hosting environment (e.g. `https://whaasco.org`) so the full image URL is correct.
+
+---
+
+## 5. Quick checklist before launch
 
 - [ ] Logo at `public/image.png` (and optional 1200×630 version for best share previews).
 - [ ] `NEXT_PUBLIC_SITE_URL` set in production.
@@ -75,7 +83,7 @@ Send the filled form plus the actual image files (or links) to the web team so c
 
 ---
 
-## 5. Summary
+## 6. Summary
 
 - **Share preview:** Uses your logo; ensure `public/image.png` exists and `NEXT_PUBLIC_SITE_URL` is set.
 - **Feedback:** Use `CONTENT-FEEDBACK.txt` as the single place to list all text, photo, and hero choices.
