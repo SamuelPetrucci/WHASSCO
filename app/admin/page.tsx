@@ -11,7 +11,7 @@ import type {
   StaticPageContent,
   HomeContent,
 } from "@/lib/content-types";
-import { SITE_PAGE_KEYS, type SitePageKey, DEFAULT_STATIC_PAGE_CONTENT } from "@/lib/content-types";
+import { SITE_PAGE_KEYS, type SitePageKey, DEFAULT_STATIC_PAGE_CONTENT, DEFAULT_HOME_CONTENT } from "@/lib/content-types";
 
 const CONTENT_API = "/api/content";
 const UPLOAD_API = "/api/upload";
@@ -52,7 +52,7 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"hero" | "events" | "gallery" | "pages" | "site-pages" | "home">("hero");
+  const [activeTab, setActiveTab] = useState<"home" | "events" | "gallery" | "pages" | "site-pages">("home");
 
   const headers = useCallback(() => {
     const h: Record<string, string> = { "Content-Type": "application/json" };
@@ -268,7 +268,7 @@ export default function AdminPage() {
 
       <div className="p-4 max-w-5xl mx-auto">
         <div className="flex gap-2 border-b border-gray-200 mb-6">
-          {(["hero", "events", "gallery", "pages", "site-pages", "home"] as const).map((tab) => (
+          {(["home", "events", "gallery", "pages", "site-pages"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -276,9 +276,7 @@ export default function AdminPage() {
                 activeTab === tab ? "bg-white border border-b-0 border-gray-200 text-primary-600" : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              {tab === "hero"
-                ? "Hero carousel"
-                : tab === "pages"
+              {tab === "pages"
                 ? "Custom pages"
                 : tab === "site-pages"
                 ? "Site pages"
@@ -289,13 +287,22 @@ export default function AdminPage() {
           ))}
         </div>
 
-        {activeTab === "hero" && (
-          <HeroEditor
-            slides={content.heroSlides}
-            onChange={(heroSlides) => setContent((c) => (c ? { ...c, heroSlides } : c))}
-            onUpload={uploadFile}
-            linkOptions={heroLinkOptions}
-          />
+        {activeTab === "home" && (
+          <>
+            <HeroEditor
+              slides={content.heroSlides}
+              onChange={(heroSlides) => setContent((c) => (c ? { ...c, heroSlides } : c))}
+              onUpload={uploadFile}
+              linkOptions={heroLinkOptions}
+            />
+            <div className="mt-8">
+              <HomeEditor
+                home={content.home}
+                onChange={(home) => setContent((c) => (c ? { ...c, home } : c))}
+                onUpload={uploadFile}
+              />
+            </div>
+          </>
         )}
         {activeTab === "events" && (
           <EventsEditor
@@ -324,13 +331,6 @@ export default function AdminPage() {
             onChange={(staticPageContent) => setContent((c) => (c ? { ...c, staticPageContent } : c))}
             donationLink={content.donationLink ?? ""}
             onDonationLinkChange={(v) => setContent((c) => (c ? { ...c, donationLink: v } : c))}
-            onUpload={uploadFile}
-          />
-        )}
-        {activeTab === "home" && (
-          <HomeEditor
-            home={content.home}
-            onChange={(home) => setContent((c) => (c ? { ...c, home } : c))}
             onUpload={uploadFile}
           />
         )}
@@ -846,6 +846,10 @@ function HomeEditor({
   onUpload: (file: File) => Promise<string>;
 }) {
   const value: HomeContent = home && typeof home === "object" ? home : {};
+  const merged: HomeContent = {
+    ...DEFAULT_HOME_CONTENT,
+    ...value,
+  };
   const update = (partial: Partial<HomeContent>) => {
     onChange({ ...value, ...partial });
   };
@@ -867,18 +871,22 @@ function HomeEditor({
 
   const makeCardSection = (slug: string, defaultTitle: string, defaultDescription: string) => {
     const card = getCard(slug);
+    const defaultCard = DEFAULT_HOME_CONTENT.programCards?.find((c) => c.slug === slug);
+    const displayTitle = card.title ?? defaultCard?.title ?? defaultTitle;
+    const displayDescription = card.description ?? defaultCard?.description ?? defaultDescription;
+    const displayImage = card.image ?? defaultCard?.image ?? "";
     return (
       <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs uppercase tracking-wide text-gray-500">Program card</p>
-            <p className="font-semibold text-gray-900">{defaultTitle}</p>
+            <p className="font-semibold text-gray-900">{displayTitle}</p>
             <p className="text-xs text-gray-500">Slug: {slug}</p>
           </div>
         </div>
         <ImageField
           label="Card image"
-          value={card.image ?? ""}
+          value={displayImage}
           onChange={(v) => setCard(slug, { image: v })}
           onUpload={onUpload}
         />
@@ -913,12 +921,12 @@ function HomeEditor({
         <h3 className="font-semibold text-gray-900">Mission section</h3>
         <Field
           label="Mission heading"
-          value={value.missionHeading ?? ""}
+          value={merged.missionHeading ?? ""}
           onChange={(v) => update({ missionHeading: v })}
         />
         <Field
           label="Mission statement"
-          value={value.missionStatement ?? ""}
+          value={merged.missionStatement ?? ""}
           onChange={(v) => update({ missionStatement: v })}
           textarea
         />
@@ -928,12 +936,12 @@ function HomeEditor({
         <h3 className="font-semibold text-gray-900">Programs intro</h3>
         <Field
           label="Programs heading"
-          value={value.programsIntroTitle ?? ""}
+          value={merged.programsIntroTitle ?? ""}
           onChange={(v) => update({ programsIntroTitle: v })}
         />
         <Field
           label="Programs description"
-          value={value.programsIntroBody ?? ""}
+          value={merged.programsIntroBody ?? ""}
           onChange={(v) => update({ programsIntroBody: v })}
           textarea
         />
@@ -967,12 +975,12 @@ function HomeEditor({
         <h3 className="font-semibold text-gray-900">Bottom call-to-action</h3>
         <Field
           label="CTA heading"
-          value={value.ctaTitle ?? ""}
+          value={merged.ctaTitle ?? ""}
           onChange={(v) => update({ ctaTitle: v })}
         />
         <Field
           label="CTA body"
-          value={value.ctaBody ?? ""}
+          value={merged.ctaBody ?? ""}
           onChange={(v) => update({ ctaBody: v })}
           textarea
         />

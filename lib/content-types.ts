@@ -111,6 +111,42 @@ export interface SiteContent {
   donationLink?: string;
 }
 
+/** Default copy for the home (landing) page. Used in the admin when no saved home content exists. */
+export const DEFAULT_HOME_CONTENT: HomeContent = {
+  missionHeading: "Our Mission",
+  missionStatement:
+    "Our mission is to promote unity, cultural awareness, and community involvement by providing programs and activities that strengthen families, support children, and foster pride in African American heritage and history.",
+  programsIntroTitle: "Our Programs",
+  programsIntroBody:
+    "WHAASCO offers a variety of programs designed to support families and children, including educational enrichment, cultural events, and community engagement activities.",
+  ctaTitle: "Join Us in Making a Difference",
+  ctaBody:
+    "Your support helps us continue our mission and expand our impact. Whether you volunteer, donate, or spread the word, every contribution matters.",
+  programCards: [
+    {
+      slug: "educational-enrichment",
+      title: "Educational Enrichment",
+      description:
+        "Educational enrichment activities that support academic success and personal growth for children and families.",
+      image: "/images/hero/heroimage.webp",
+    },
+    {
+      slug: "cultural-heritage",
+      title: "Cultural & Heritage Events",
+      description:
+        "Cultural and heritage-based events that celebrate African American history and foster cultural pride.",
+      image: "/images/hero/hero%20image.avif",
+    },
+    {
+      slug: "family-community",
+      title: "Family & Community Programs",
+      description:
+        "Family-oriented social gatherings, community outreach, and engagement activities that build connections.",
+      image: "/images/hero/communitygardenimage.webp",
+    },
+  ],
+};
+
 /** Default copy for each site page. Shown in the admin when no saved content exists so editors can edit current wording and photos. */
 export const DEFAULT_STATIC_PAGE_CONTENT: Partial<Record<SitePageKey, StaticPageContent>> = {
   about: {
