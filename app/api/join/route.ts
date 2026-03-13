@@ -1,4 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
+import nodemailer from "nodemailer";
+
+function getTransport() {
+  const host = process.env.SMTP_HOST;
+  const port = process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587;
+  const secure = process.env.SMTP_SECURE === "true" || port === 465;
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!host || !user || !pass) {
+    throw new Error("Email not configured (missing SMTP_HOST/SMTP_USER/SMTP_PASS).");
+  }
+
+  return nodemailer.createTransport({
+    host,
+    port,
+    secure,
+    auth: { user, pass },
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,8 +33,8 @@ export async function POST(request: NextRequest) {
     }
 
     const emailContent = {
-      to: process.env.CONTACT_EMAIL || "info@whaasco.org",
-      from: process.env.FROM_EMAIL || "noreply@whaasco.org",
+      to: process.env.CONTACT_EMAIL || process.env.SMTP_TO || "info@whaasco.org",
+      from: process.env.SMTP_FROM || process.env.FROM_EMAIL || "noreply@whaasco.org",
       subject: `Join WHAASCO Interest Form: ${name}`,
       text: `
         New interest form submission:
@@ -34,8 +54,14 @@ export async function POST(request: NextRequest) {
       `,
     };
 
-    // TODO: Integrate with email service (SendGrid, Resend, AWS SES, etc.)
-    console.log("Join WHAASCO form submission:", emailContent);
+    const transport = getTransport();
+    await transport.sendMail({
+      to: emailContent.to,
+      from: emailContent.from,
+      subject: emailContent.subject,
+      text: emailContent.text,
+      html: emailContent.html,
+    });
 
     return NextResponse.json(
       {

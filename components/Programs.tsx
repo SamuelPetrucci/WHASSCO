@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { HomeContent } from "@/lib/content-types";
 
-const programs = [
+const defaultPrograms = [
   {
     slug: "educational-enrichment",
     title: "Educational Enrichment",
@@ -28,16 +29,32 @@ const programs = [
   },
 ];
 
-export default function Programs() {
+export default function Programs({ home }: { home?: HomeContent }) {
+  const introTitle = home?.programsIntroTitle?.trim() || "Our Programs";
+  const introBody =
+    home?.programsIntroBody?.trim() ||
+    "WHAASCO offers a variety of programs designed to support families and children, including educational enrichment, cultural events, and community engagement activities.";
+
+  const overrides = home?.programCards ?? [];
+  const programs = defaultPrograms.map((p) => {
+    const override = overrides.find((o) => o.slug === p.slug);
+    return {
+      ...p,
+      title: override?.title?.trim() || p.title,
+      description: override?.description?.trim() || p.description,
+      image: override?.image?.trim() || p.image,
+    };
+  });
+
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Our Programs
+            {introTitle}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            WHAASCO offers a variety of programs designed to support families and children, including educational enrichment, cultural events, and community engagement activities.
+            {introBody}
           </p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">

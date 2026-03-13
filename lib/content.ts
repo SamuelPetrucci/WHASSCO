@@ -1,6 +1,7 @@
 import { list, put } from "@vercel/blob";
 import { readFile, writeFile, mkdir } from "fs/promises";
 import path from "path";
+import nodemailer from "nodemailer";
 import type { SiteContent, SitePageKey, StaticPageContent } from "./content-types";
 import { SITE_PAGE_KEYS } from "./content-types";
 
@@ -11,6 +12,61 @@ const CONTENT_PATH = "content.json";
 const CONTENT_BACKUP_PATH = "content-backup.json";
 const LOCAL_CONTENT_PATH = path.join(process.cwd(), ".data", "content.json");
 const LOCAL_BACKUP_PATH = path.join(process.cwd(), ".data", "content-backup.json");
+
+function getMailTransport() {
+  const host = process.env.SMTP_HOST;
+  const port = process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587;
+  const secure = process.env.SMTP_SECURE === "true" || port === 465;
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!host || !user || !pass) {
+    throw new Error("Email not configured (missing SMTP_HOST/SMTP_USER/SMTP_PASS).");
+  }
+
+  return nodemailer.createTransport({
+    host,
+    port,
+    secure,
+    auth: { user, pass },
+  });
+}
+
+async function sendDonationLinkChangedEmail(previous: string, next: string) {
+  // If email is not configured, fail silently so content saving still works.
+  try {
+    const transport = getMailTransport();
+    const to = process.env.CONTACT_EMAIL || process.env.SMTP_TO || "info@whaasco.org";
+    const from = process.env.SMTP_FROM || process.env.FROM_EMAIL || process.env.SMTP_USER || "noreply@whaasco.org";
+
+    const prevDisplay = previous.trim() || "(none)";
+    const nextDisplay = next.trim() || "(none)";
+
+    const subject = "WHAASCO site: Donation link updated";
+    const text = `The donation link in the WHAASCO admin was changed.
+
+Previous: ${prevDisplay}
+New: ${nextDisplay}
+
+This controls where the Donate button and /donate route send visitors.`;
+
+    const html = `<h2>Donation link updated</h2>
+<p>The donation link in the WHAASCO admin was changed.</p>
+<p><strong>Previous:</strong> ${prevDisplay}</p>
+<p><strong>New:</strong> ${nextDisplay}</p>
+<p>This controls where the <strong>Donate</strong> button and <code>/donate</code> route send visitors.</p>`;
+
+    await transport.sendMail({
+      to,
+      from,
+      subject,
+      text,
+      html,
+    });
+  } catch {
+    // Swallow errors so a mail problem never blocks saving content.
+  }
+}
 
 const defaultContent: SiteContent = {
   heroSlides: [
@@ -75,6 +131,7 @@ const defaultContent: SiteContent = {
   ],
   galleryItems: [],
   customPages: [],
+  home: undefined,
   staticPageContent: {},
   donationLink: "",
 };
@@ -109,16 +166,28 @@ export async function getContent(): Promise<SiteContent> {
 export async function saveContent(content: SiteContent): Promise<void> {
   const normalized = normalizeContent(content);
   const payload = JSON.stringify(normalized, null, 2);
+  const newDonation = (normalized.donationLink ?? "").trim();
+  let previousDonation = "";
 
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     await mkdir(path.dirname(LOCAL_CONTENT_PATH), { recursive: true });
     try {
       const current = await readFile(LOCAL_CONTENT_PATH, "utf-8");
       await writeFile(LOCAL_BACKUP_PATH, current, "utf-8");
+      try {
+        const parsed = JSON.parse(current) as SiteContent;
+        previousDonation = (parsed.donationLink ?? "").trim();
+      } catch {
+        previousDonation = "";
+      }
     } catch {
       // No existing file or no backup; continue with save
     }
     await writeFile(LOCAL_CONTENT_PATH, payload, "utf-8");
+
+    if (previousDonation !== newDonation) {
+      await sendDonationLinkChangedEmail(previousDonation, newDonation);
+    }
     return;
   }
 
@@ -135,6 +204,12 @@ export async function saveContent(content: SiteContent): Promise<void> {
           addRandomSuffix: false,
           allowOverwrite: true,
         });
+        try {
+          const parsed = JSON.parse(backupPayload) as SiteContent;
+          previousDonation = (parsed.donationLink ?? "").trim();
+        } catch {
+          previousDonation = "";
+        }
       }
     }
   } catch {
@@ -146,6 +221,10 @@ export async function saveContent(content: SiteContent): Promise<void> {
     addRandomSuffix: false,
     allowOverwrite: true,
   });
+
+  if (previousDonation !== newDonation) {
+    await sendDonationLinkChangedEmail(previousDonation, newDonation);
+  }
 }
 
 /** Restore content from the last backup (previous version before last save). Use if someone altered content by mistake. */
@@ -193,6 +272,7 @@ function normalizeContent(c: Partial<SiteContent>): SiteContent {
     events: Array.isArray(c.events) ? c.events : defaultContent.events,
     galleryItems: Array.isArray(c.galleryItems) ? c.galleryItems : defaultContent.galleryItems,
     customPages: Array.isArray(c.customPages) ? c.customPages : defaultContent.customPages,
+    home: c.home && typeof c.home === "object" ? c.home : defaultContent.home,
     staticPageContent,
     donationLink: typeof c.donationLink === "string" ? c.donationLink : (defaultContent.donationLink ?? ""),
   };

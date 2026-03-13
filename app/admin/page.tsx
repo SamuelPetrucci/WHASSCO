@@ -1,7 +1,16 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { SiteContent, HeroSlide, EventItem, GalleryItem, CustomPage, CustomPagePlacement, StaticPageContent } from "@/lib/content-types";
+import type {
+  SiteContent,
+  HeroSlide,
+  EventItem,
+  GalleryItem,
+  CustomPage,
+  CustomPagePlacement,
+  StaticPageContent,
+  HomeContent,
+} from "@/lib/content-types";
 import { SITE_PAGE_KEYS, type SitePageKey, DEFAULT_STATIC_PAGE_CONTENT } from "@/lib/content-types";
 
 const CONTENT_API = "/api/content";
@@ -43,7 +52,7 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"hero" | "events" | "gallery" | "pages" | "site-pages">("hero");
+  const [activeTab, setActiveTab] = useState<"hero" | "events" | "gallery" | "pages" | "site-pages" | "home">("hero");
 
   const headers = useCallback(() => {
     const h: Record<string, string> = { "Content-Type": "application/json" };
@@ -259,7 +268,7 @@ export default function AdminPage() {
 
       <div className="p-4 max-w-5xl mx-auto">
         <div className="flex gap-2 border-b border-gray-200 mb-6">
-          {(["hero", "events", "gallery", "pages", "site-pages"] as const).map((tab) => (
+          {(["hero", "events", "gallery", "pages", "site-pages", "home"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -267,7 +276,15 @@ export default function AdminPage() {
                 activeTab === tab ? "bg-white border border-b-0 border-gray-200 text-primary-600" : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              {tab === "hero" ? "Hero carousel" : tab === "pages" ? "Custom pages" : tab === "site-pages" ? "Site pages" : tab}
+              {tab === "hero"
+                ? "Hero carousel"
+                : tab === "pages"
+                ? "Custom pages"
+                : tab === "site-pages"
+                ? "Site pages"
+                : tab === "home"
+                ? "Home page"
+                : tab}
             </button>
           ))}
         </div>
@@ -307,6 +324,13 @@ export default function AdminPage() {
             onChange={(staticPageContent) => setContent((c) => (c ? { ...c, staticPageContent } : c))}
             donationLink={content.donationLink ?? ""}
             onDonationLinkChange={(v) => setContent((c) => (c ? { ...c, donationLink: v } : c))}
+            onUpload={uploadFile}
+          />
+        )}
+        {activeTab === "home" && (
+          <HomeEditor
+            home={content.home}
+            onChange={(home) => setContent((c) => (c ? { ...c, home } : c))}
             onUpload={uploadFile}
           />
         )}
@@ -808,6 +832,151 @@ function ReadOnlyLinkField({ label, value }: { label: string; value: string }) {
         title="Button links are fixed to avoid broken hero buttons. Do not change."
       />
       <p className="mt-1 text-xs text-gray-500">Fixed route — not editable</p>
+    </div>
+  );
+}
+
+function HomeEditor({
+  home,
+  onChange,
+  onUpload,
+}: {
+  home: HomeContent | undefined;
+  onChange: (home: HomeContent) => void;
+  onUpload: (file: File) => Promise<string>;
+}) {
+  const value: HomeContent = home && typeof home === "object" ? home : {};
+  const update = (partial: Partial<HomeContent>) => {
+    onChange({ ...value, ...partial });
+  };
+
+  const getCard = (slug: string): NonNullable<HomeContent["programCards"]>[number] => {
+    const list = value.programCards ?? [];
+    return list.find((c) => c.slug === slug) ?? { slug };
+  };
+
+  const setCard = (slug: string, partial: Partial<NonNullable<HomeContent["programCards"]>[number]>) => {
+    const list = value.programCards ?? [];
+    const existingIndex = list.findIndex((c) => c.slug === slug);
+    const existing = existingIndex >= 0 ? list[existingIndex] : { slug };
+    const nextCard = { ...existing, ...partial };
+    const nextList = existingIndex >= 0 ? [...list] : [...list, nextCard];
+    if (existingIndex >= 0) nextList[existingIndex] = nextCard;
+    update({ programCards: nextList });
+  };
+
+  const makeCardSection = (slug: string, defaultTitle: string, defaultDescription: string) => {
+    const card = getCard(slug);
+    return (
+      <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-wide text-gray-500">Program card</p>
+            <p className="font-semibold text-gray-900">{defaultTitle}</p>
+            <p className="text-xs text-gray-500">Slug: {slug}</p>
+          </div>
+        </div>
+        <ImageField
+          label="Card image"
+          value={card.image ?? ""}
+          onChange={(v) => setCard(slug, { image: v })}
+          onUpload={onUpload}
+        />
+        <Field
+          label="Card title"
+          value={card.title ?? ""}
+          onChange={(v) => setCard(slug, { title: v })}
+        />
+        <Field
+          label="Card description"
+          value={card.description ?? ""}
+          onChange={(v) => setCard(slug, { description: v })}
+          textarea
+        />
+        <p className="text-xs text-gray-500">
+          If left blank, the card will use the default title/description and its original image from the site design.
+        </p>
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+        <p className="font-medium">Home page content</p>
+        <p className="mt-1 text-blue-800">
+          Edit the text and images on the main landing page. These settings control the mission statement, programs intro, bottom call-to-action, and images/text for the three program cards.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-xl shadow p-6 space-y-4">
+        <h3 className="font-semibold text-gray-900">Mission section</h3>
+        <Field
+          label="Mission heading"
+          value={value.missionHeading ?? ""}
+          onChange={(v) => update({ missionHeading: v })}
+        />
+        <Field
+          label="Mission statement"
+          value={value.missionStatement ?? ""}
+          onChange={(v) => update({ missionStatement: v })}
+          textarea
+        />
+      </div>
+
+      <div className="bg-white rounded-xl shadow p-6 space-y-4">
+        <h3 className="font-semibold text-gray-900">Programs intro</h3>
+        <Field
+          label="Programs heading"
+          value={value.programsIntroTitle ?? ""}
+          onChange={(v) => update({ programsIntroTitle: v })}
+        />
+        <Field
+          label="Programs description"
+          value={value.programsIntroBody ?? ""}
+          onChange={(v) => update({ programsIntroBody: v })}
+          textarea
+        />
+      </div>
+
+      <div className="bg-white rounded-xl shadow p-6 space-y-4">
+        <h3 className="font-semibold text-gray-900">Program cards</h3>
+        <p className="text-sm text-gray-600 mb-2">
+          Update the images and text for the three cards shown under &quot;Our Programs&quot; on the home page.
+        </p>
+        <div className="grid md:grid-cols-3 gap-4">
+          {makeCardSection(
+            "educational-enrichment",
+            "Educational Enrichment",
+            "Educational enrichment activities that support academic success and personal growth for children and families.",
+          )}
+          {makeCardSection(
+            "cultural-heritage",
+            "Cultural & Heritage Events",
+            "Cultural and heritage-based events that celebrate African American history and foster cultural pride.",
+          )}
+          {makeCardSection(
+            "family-community",
+            "Family & Community Programs",
+            "Family-oriented social gatherings, community outreach, and engagement activities that build connections.",
+          )}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl shadow p-6 space-y-4">
+        <h3 className="font-semibold text-gray-900">Bottom call-to-action</h3>
+        <Field
+          label="CTA heading"
+          value={value.ctaTitle ?? ""}
+          onChange={(v) => update({ ctaTitle: v })}
+        />
+        <Field
+          label="CTA body"
+          value={value.ctaBody ?? ""}
+          onChange={(v) => update({ ctaBody: v })}
+          textarea
+        />
+      </div>
     </div>
   );
 }

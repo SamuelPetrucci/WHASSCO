@@ -30,6 +30,33 @@ export interface GalleryItem {
   date?: string;
 }
 
+/** Optional overrides for the home (landing) page sections. */
+export interface HomeProgramCard {
+  /** Must match one of the default program slugs (e.g. "educational-enrichment"). */
+  slug: string;
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+export interface HomeContent {
+  /** Heading for the mission section (defaults to "Our Mission"). */
+  missionHeading?: string;
+  /** Main mission statement text under the heading. */
+  missionStatement?: string;
+
+  /** Heading and body for the programs intro above the cards. */
+  programsIntroTitle?: string;
+  programsIntroBody?: string;
+
+  /** CTA section at the bottom of the home page. */
+  ctaTitle?: string;
+  ctaBody?: string;
+
+  /** Optional overrides for the three program cards on the home page. */
+  programCards?: HomeProgramCard[];
+}
+
 export type CustomPagePlacement = "header" | "footer" | "both" | "none";
 
 export interface CustomPage {
@@ -76,6 +103,8 @@ export interface SiteContent {
   events: EventItem[];
   galleryItems: GalleryItem[];
   customPages: CustomPage[];
+  /** Optional overrides for the landing (home) page sections. */
+  home?: HomeContent;
   /** Editable content for built-in pages. Key = route segment (e.g. "about", "earl-exum-tribute"). */
   staticPageContent?: Partial<Record<SitePageKey, StaticPageContent>>;
   /** URL for the Donate button (third-party platform e.g. Zeffy, PayPal, Givebutter). When set, Donate Now redirects here. */

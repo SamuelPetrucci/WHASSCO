@@ -3,9 +3,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import ContactModal from "./ContactModal";
+import type { HomeContent } from "@/lib/content-types";
 
-export default function CTA() {
+export default function CTA({ home }: { home?: HomeContent }) {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const title = home?.ctaTitle?.trim() || "Join Us in Making a Difference";
+  const body =
+    home?.ctaBody?.trim() ||
+    "Your support helps us continue our mission and expand our impact. Whether you volunteer, donate, or spread the word, every contribution matters.";
   
   return (
     <section className="py-20 bg-african-black-900 text-white relative overflow-hidden">
@@ -19,11 +24,10 @@ export default function CTA() {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Join Us in Making a Difference
+            {title}
           </h2>
           <p className="text-lg text-gray-300 mb-8">
-            Your support helps us continue our mission and expand our impact. Whether
-            you volunteer, donate, or spread the word, every contribution matters.
+            {body}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

@@ -8,14 +8,15 @@ import CTA from "@/components/CTA";
 
 export default async function Home() {
   const content = await getContent();
+  const home = content.home;
   return (
     <>
       <HeroCarousel slides={content.heroSlides} />
-      <Mission />
-      <Programs />
+      <Mission home={home} />
+      <Programs home={home} />
       <HistoryPreview />
       <BoardPreview />
-      <CTA />
+      <CTA home={home} />
     </>
   );
 }

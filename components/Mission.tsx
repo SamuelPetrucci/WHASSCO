@@ -1,6 +1,11 @@
 import ScrollAnimation from "./ScrollAnimation";
+import type { HomeContent } from "@/lib/content-types";
 
-export default function Mission() {
+export default function Mission({ home }: { home?: HomeContent }) {
+  const heading = home?.missionHeading?.trim() || "Our Mission";
+  const statement =
+    home?.missionStatement?.trim() ||
+    "Our mission is to promote unity, cultural awareness, and community involvement by providing programs and activities that strengthen families, support children, and foster pride in African American heritage and history.";
   return (
     <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
       {/* Decorative background elements */}
@@ -14,7 +19,7 @@ export default function Mission() {
           <ScrollAnimation direction="fade">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Our Mission
+                {heading}
               </h2>
               <div className="w-24 h-1 bg-african-gradient mx-auto rounded-full"></div>
             </div>
@@ -48,7 +53,7 @@ export default function Mission() {
                     </svg>
                   </div>
                   <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6 leading-tight">
-                    Our mission is to promote unity, cultural awareness, and community involvement by providing programs and activities that strengthen families, support children, and foster pride in African American heritage and history.
+                    {statement}
                   </h3>
                   <div className="flex items-center justify-center gap-2 mb-6">
                     <div className="h-px bg-gradient-to-r from-transparent via-primary-500 to-transparent flex-1 max-w-xs"></div>
