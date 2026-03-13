@@ -6,6 +6,7 @@ import { SITE_PAGE_KEYS, type SitePageKey, DEFAULT_STATIC_PAGE_CONTENT } from "@
 
 const CONTENT_API = "/api/content";
 const UPLOAD_API = "/api/upload";
+const VERIFY_API = "/api/admin/verify";
 const ADMIN_STORAGE_KEY = "whaasco_admin_secret";
 
 type HeroLinkOption = { label: string; href: string };
@@ -38,6 +39,7 @@ export default function AdminPage() {
   const [storedSecret, setStoredSecret] = useState<string | null>(null);
   const [content, setContent] = useState<SiteContent | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loggingIn, setLoggingIn] = useState(false);
   const [saving, setSaving] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -76,14 +78,32 @@ export default function AdminPage() {
     };
   }, [storedSecret]);
 
-  const login = (e: React.FormEvent) => {
+  const login = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!secret.trim()) return;
-    sessionStorage.setItem(ADMIN_STORAGE_KEY, secret.trim());
-    setStoredSecret(secret.trim());
-    setSecret("");
-    setLoading(true);
+    const password = secret.trim();
+    if (!password) return;
+    setLoggingIn(true);
     setError(null);
+    try {
+      const res = await fetch(VERIFY_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-admin-secret": password },
+        body: JSON.stringify({ password }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        const msg = typeof data?.error === "string" ? data.error : "Invalid password";
+        throw new Error(msg);
+      }
+      sessionStorage.setItem(ADMIN_STORAGE_KEY, password);
+      setStoredSecret(password);
+      setSecret("");
+      setLoading(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Invalid password");
+    } finally {
+      setLoggingIn(false);
+    }
   };
 
   const logout = () => {
@@ -103,6 +123,9 @@ export default function AdminPage() {
         body: JSON.stringify(content),
       });
       if (!res.ok) throw new Error(await res.text());
+      // Refetch so the UI matches what's actually stored (important when deleting pages)
+      const refetched = await fetch(CONTENT_API).then((r) => (r.ok ? r.json() : null));
+      if (refetched) setContent(refetched);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Save failed");
     } finally {
@@ -159,13 +182,25 @@ export default function AdminPage() {
           <input
             type="password"
             value={secret}
-            onChange={(e) => setSecret(e.target.value)}
+            onChange={(e) => {
+              setSecret(e.target.value);
+              if (error) setError(null);
+            }}
             placeholder="Password"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4"
             autoFocus
           />
-          <button type="submit" className="w-full bg-primary-600 text-white py-2 rounded-lg font-semibold hover:bg-primary-700">
-            Log in
+          {error && (
+            <p className="text-red-600 text-sm mb-3" role="alert">
+              {error}
+            </p>
+          )}
+          <button
+            type="submit"
+            disabled={loggingIn}
+            className="w-full bg-primary-600 text-white py-2 rounded-lg font-semibold hover:bg-primary-700 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loggingIn ? "Verifying…" : "Log in"}
           </button>
         </form>
       </div>
@@ -210,6 +245,15 @@ export default function AdminPage() {
       {error && (
         <div className="mx-4 mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
           {error}
+        </div>
+      )}
+
+      {typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && (
+        <div className="mx-4 mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-900 text-sm" role="status">
+          <p className="font-medium">You are editing local content only.</p>
+          <p className="mt-1 text-amber-800">
+            Changes here only affect your computer. To add or remove pages on the <strong>live site</strong>, open your site&apos;s admin on the live URL (e.g. yoursite.vercel.app/admin), make your changes there, and click Save.
+          </p>
         </div>
       )}
 
@@ -495,6 +539,9 @@ function PagesEditor({
         <p className="mt-1 text-blue-800">
           Each page has a hero image and content, and is published at <strong>/pages/[slug]</strong>. Use a short URL-friendly slug (e.g. <code className="bg-blue-100 px-1 rounded">my-event</code>). You can use basic HTML in the content (e.g. &lt;p&gt;, &lt;strong&gt;, &lt;a href=&quot;...&quot;&gt;).
         </p>
+        <p className="mt-2 text-blue-800">
+          To <strong>remove a page from the live site</strong>, open the admin on your live site URL (not localhost), remove the page here, and click &quot;Save all changes&quot; at the top.
+        </p>
       </div>
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold text-gray-900">Pages</h2>
@@ -557,7 +604,8 @@ function PagesEditor({
             onUpload={onUpload}
           />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Content (HTML allowed)</label>
+            <HtmlLlmHelp id={`custom-page-llm-${i}`} />
+            <label className="block text-sm font-medium text-gray-700 mb-1 mt-4">Content (HTML)</label>
             <textarea
               value={page.body}
               onChange={(e) => update(i, { body: e.target.value })}
@@ -577,6 +625,42 @@ function PagesEditor({
 
 const SITE_PAGE_BODY_PLACEHOLDER =
   '<p>Your content here. Use the button above to insert images, or paste image URLs in <img src="..." /> tags.</p>';
+
+/** Prompt for editors to paste into ChatGPT, Claude, etc. to turn plain text into HTML. */
+const LLM_HTML_PROMPT = `Convert the following into clean, semantic HTML for a webpage. Use only these tags: <p>, <h2>, <h3>, <h4>, <strong>, <em>, <ul>, <ol>, <li>, <a href="...">. For images use <img src="URL" alt="description" />. Do not use <div> or <span> unless necessary. Output only the HTML, no explanation.
+
+My content:
+[Paste your draft or bullet points here]`;
+
+function HtmlLlmHelp({ id }: { id: string }) {
+  const [copied, setCopied] = useState(false);
+  const copyPrompt = () => {
+    void navigator.clipboard.writeText(LLM_HTML_PROMPT).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+  return (
+    <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-800">
+      <p className="font-medium text-slate-900">Using an AI assistant to write HTML</p>
+      <p className="mt-1 text-slate-700">
+        Use a large language model (e.g. ChatGPT, Claude, or Copilot) to turn your text into HTML. Copy the prompt below, replace <strong>[Paste your draft or bullet points here]</strong> with your content, paste into the AI, then copy the AI&apos;s HTML output into the content field.
+      </p>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={copyPrompt}
+          className="rounded bg-slate-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800"
+        >
+          {copied ? "Copied!" : "Copy prompt"}
+        </button>
+      </div>
+      <pre id={id} className="mt-2 max-h-32 overflow-auto rounded border border-slate-200 bg-white p-2 text-xs text-slate-600 whitespace-pre-wrap font-sans">
+        {LLM_HTML_PROMPT}
+      </pre>
+    </div>
+  );
+}
 
 const SITE_PAGE_LABELS: Record<SitePageKey, string> = {
   about: "About",
@@ -684,7 +768,8 @@ function SitePagesEditor({
           onChange={(v) => update({ heroSubtitle: v })}
         />
         <div>
-          <div className="flex items-center justify-between gap-2 mb-1">
+          <HtmlLlmHelp id="site-pages-llm-prompt" />
+          <div className="flex items-center justify-between gap-2 mb-1 mt-4">
             <label className="block text-sm font-medium text-gray-700">Page content (HTML)</label>
             <label className="cursor-pointer text-primary-600 font-medium text-sm hover:underline shrink-0">
               {insertingImage ? "Uploading…" : "Upload and insert image"}

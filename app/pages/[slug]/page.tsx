@@ -50,7 +50,7 @@ export default async function CustomPageRoute({ params }: PageProps) {
         <div className="max-w-4xl mx-auto">
           {page.body?.trim() ? (
             <div
-              className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900"
+              className="cms-body prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-img:rounded-lg prose-img:shadow-md"
               dangerouslySetInnerHTML={{ __html: page.body }}
             />
           ) : (

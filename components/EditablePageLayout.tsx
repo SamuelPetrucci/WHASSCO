@@ -44,7 +44,7 @@ export default function EditablePageLayout({ content, children }: EditablePageLa
         <div className="max-w-4xl mx-auto">
           {body?.trim() ? (
             <div
-              className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-img:rounded-lg prose-img:shadow-md"
+              className="cms-body prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-img:rounded-lg prose-img:shadow-md"
               dangerouslySetInnerHTML={{ __html: body }}
             />
           ) : null}

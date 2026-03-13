@@ -97,7 +97,7 @@ export async function getContent(): Promise<SiteContent> {
     const blobs = await list({ prefix: "content", limit: 10 });
     const exact = blobs.blobs.find((b) => b.pathname === CONTENT_PATH);
     if (!exact?.url) return getDefaultContent();
-    const res = await fetch(exact.url);
+    const res = await fetch(exact.url, { cache: "no-store" });
     if (!res.ok) return getDefaultContent();
     const parsed = (await res.json()) as SiteContent;
     return normalizeContent(parsed);

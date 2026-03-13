@@ -8,6 +8,9 @@ import { getContent } from "@/lib/content";
 
 const inter = Inter({ subsets: ["latin"] });
 
+/** Nav must reflect current CMS content (e.g. after deleting a custom page). */
+export const dynamic = "force-dynamic";
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://whaasco.org";
 
 export const metadata: Metadata = {

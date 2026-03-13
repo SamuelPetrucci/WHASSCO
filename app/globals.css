@@ -205,6 +205,35 @@ body {
     position: relative;
   }
   
+  /* CMS body: ensure HTML from admin (headings, lists, etc.) renders as real elements */
+  .cms-body h2 {
+    @apply text-2xl font-bold text-gray-900 mt-8 mb-3;
+  }
+  .cms-body h3 {
+    @apply text-xl font-semibold text-gray-900 mt-6 mb-2;
+  }
+  .cms-body h4 {
+    @apply text-lg font-semibold text-gray-900 mt-4 mb-2;
+  }
+  .cms-body p {
+    @apply text-gray-700 leading-relaxed mb-4;
+  }
+  .cms-body ul {
+    @apply list-disc pl-6 mb-4 space-y-1 text-gray-700;
+  }
+  .cms-body ol {
+    @apply list-decimal pl-6 mb-4 space-y-1 text-gray-700;
+  }
+  .cms-body a {
+    @apply text-primary-600 underline hover:no-underline;
+  }
+  .cms-body strong {
+    @apply font-semibold text-gray-900;
+  }
+  .cms-body img {
+    @apply max-w-full h-auto rounded-lg shadow-md my-4;
+  }
+
   .african-border-accent::before {
     content: '';
     position: absolute;
