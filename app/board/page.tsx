@@ -1,6 +1,6 @@
-"use client";
-
 import BoardMemberCard from "@/components/BoardMemberCard";
+import { getContent, hasStaticPageContent } from "@/lib/content";
+import EditablePageLayout from "@/components/EditablePageLayout";
 
 const BOARD_MEMBERS = [
   {
@@ -25,7 +25,12 @@ const BOARD_MEMBERS = [
   },
 ];
 
-export default function BoardPage() {
+export default async function BoardPage() {
+  const content = await getContent();
+  const pageContent = content.staticPageContent?.board;
+  if (pageContent && hasStaticPageContent(pageContent)) {
+    return <EditablePageLayout content={pageContent} />;
+  }
   return (
     <div className="py-12 md:py-20 bg-gray-50">
       <div className="container mx-auto px-4">

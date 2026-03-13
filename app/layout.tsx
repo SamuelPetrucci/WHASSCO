@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { getContent } from "@/lib/content";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,19 +33,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const content = await getContent();
+  const customPages = content.customPages ?? [];
+  const headerPages = customPages.filter(
+    (p) => p.placement === "header" || p.placement === "both"
+  );
+  const footerPages = customPages.filter(
+    (p) => p.placement === "footer" || p.placement === "both"
+  );
+
   return (
     <html lang="en" className="scroll-smooth">
       <body className={inter.className}>
         <Suspense fallback={<header className="bg-white shadow-md sticky top-0 z-50 border-b-4 border-african-gold-500 h-28" />}>
-          <Header />
+          <Header headerPages={headerPages} />
         </Suspense>
         <main className="min-h-screen animate-fade-in">{children}</main>
-        <Footer />
+        <Footer footerPages={footerPages} />
       </body>
     </html>
   );

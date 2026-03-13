@@ -6,8 +6,13 @@ import { useSearchParams } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import ContactModal from "./ContactModal";
 import JoinWHAASCOModal from "./JoinWHAASCOModal";
+import type { CustomPage } from "@/lib/content-types";
 
-export default function Header() {
+interface HeaderProps {
+  headerPages?: Pick<CustomPage, "slug" | "title">[];
+}
+
+export default function Header({ headerPages = [] }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
   const [isMobileAboutOpen, setIsMobileAboutOpen] = useState(false);
@@ -138,6 +143,15 @@ export default function Header() {
             >
               Gallery & Events
             </Link>
+            {headerPages.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/pages/${p.slug}`}
+                className="text-african-black-800 hover:text-primary-600 transition-colors font-medium"
+              >
+                {p.title || p.slug}
+              </Link>
+            ))}
             <button
               onClick={() => setIsContactModalOpen(true)}
               className="text-african-black-800 hover:text-primary-600 transition-colors font-medium"
@@ -233,6 +247,16 @@ export default function Header() {
             >
               Gallery & Events
             </Link>
+            {headerPages.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/pages/${p.slug}`}
+                className="block py-2 text-african-black-800 hover:text-primary-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {p.title || p.slug}
+              </Link>
+            ))}
             <button
               onClick={() => {
                 setIsContactModalOpen(true);

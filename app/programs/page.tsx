@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getContent, hasStaticPageContent } from "@/lib/content";
+import EditablePageLayout from "@/components/EditablePageLayout";
 
 const programs = [
   {
@@ -43,7 +45,12 @@ const programs = [
   },
 ];
 
-export default function ProgramsPage() {
+export default async function ProgramsPage() {
+  const content = await getContent();
+  const pageContent = content.staticPageContent?.programs;
+  if (pageContent && hasStaticPageContent(pageContent)) {
+    return <EditablePageLayout content={pageContent} />;
+  }
   return (
     <div className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">

@@ -27,6 +27,9 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# local dev content (when BLOB_READ_WRITE_TOKEN is not set)
+/.data/
+
 # vercel
 .vercel
 

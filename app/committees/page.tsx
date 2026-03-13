@@ -1,6 +1,13 @@
 import Link from "next/link";
+import { getContent, hasStaticPageContent } from "@/lib/content";
+import EditablePageLayout from "@/components/EditablePageLayout";
 
-export default function CommitteesPage() {
+export default async function CommitteesPage() {
+  const content = await getContent();
+  const pageContent = content.staticPageContent?.committees;
+  if (pageContent && hasStaticPageContent(pageContent)) {
+    return <EditablePageLayout content={pageContent} />;
+  }
   return (
     <div className="bg-gray-50">
       {/* Hero */}
@@ -66,16 +73,16 @@ export default function CommitteesPage() {
           <div className="mt-12 bg-primary-50 p-6 rounded-lg">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Get Involved</h2>
             <p className="text-gray-700 mb-4">
-              Interested in joining a committee? We welcome community members who want to contribute their time and skills. Share your interests and we'll help you find the right fit.
+              Committee membership is a good fit for those who share our mission and can commit time and energy to our work. We’re always glad to hear from community members who are interested. If you’d like to be considered, share your interests and background with us—we’ll review and reach out to discuss whether there’s a role that fits.
             </p>
             <Link
               href="/committees?join=1"
               className="inline-block bg-african-gradient text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all shadow-md"
             >
-              Interested in WHAASCO
+              Express interest
             </Link>
             <p className="text-sm text-gray-600 mt-3">
-              Click above to open our interest form, or <Link href="/contact" className="text-primary-600 hover:text-primary-700 font-semibold">contact us</Link> directly.
+              Submit the form above so we can learn about you, or <Link href="/contact" className="text-primary-600 hover:text-primary-700 font-semibold">contact us</Link> with questions.
             </p>
           </div>
         </div>

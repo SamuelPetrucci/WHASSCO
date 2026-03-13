@@ -4,8 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import ContactModal from "./ContactModal";
+import type { CustomPage } from "@/lib/content-types";
 
-export default function Footer() {
+interface FooterProps {
+  footerPages?: Pick<CustomPage, "slug" | "title">[];
+}
+
+export default function Footer({ footerPages = [] }: FooterProps) {
   const currentYear = new Date().getFullYear();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
@@ -53,6 +58,16 @@ export default function Footer() {
                   Our Programs
                 </Link>
               </li>
+              {footerPages.map((p) => (
+                <li key={p.slug}>
+                  <Link
+                    href={`/pages/${p.slug}`}
+                    className="hover:text-primary-500 transition-colors"
+                  >
+                    {p.title || p.slug}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <Link href="/?join=1" className="hover:text-primary-500 transition-colors">
                   Interested in WHAASCO

@@ -1,13 +1,19 @@
 import Link from "next/link";
 import Image from "next/image";
+import { getContent, hasStaticPageContent } from "@/lib/content";
+import EditablePageLayout from "@/components/EditablePageLayout";
 
 // Community meeting / heritage; legacy collaboration
 const HISTORY_HERO =
   "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=1200&q=80";
-const HISTORY_LEGACY =
-  "https://images.unsplash.com/photo-1582552938357-32c90648845c?w=800&q=80";
 
-export default function HistoryPage() {
+export default async function HistoryPage() {
+  const content = await getContent();
+  const pageContent = content.staticPageContent?.history;
+  if (pageContent && hasStaticPageContent(pageContent)) {
+    return <EditablePageLayout content={pageContent} />;
+  }
+
   return (
     <div className="bg-gray-50">
       {/* Hero image */}

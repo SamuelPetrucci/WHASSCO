@@ -3,21 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
+import type { HeroSlide } from "@/lib/content-types";
 
 const SWIPE_THRESHOLD = 50;
 
-interface Slide {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  primaryButtonText: string;
-  primaryButtonLink: string;
-  secondaryButtonText?: string;
-  secondaryButtonLink?: string;
-}
-
-const slides: Slide[] = [
+const defaultSlides: HeroSlide[] = [
   {
     id: 1,
     title: "Empowering Families, Supporting Youth, Celebrating Culture",
@@ -60,22 +50,28 @@ const slides: Slide[] = [
   },
 ];
 
-export default function HeroCarousel() {
+interface HeroCarouselProps {
+  slides?: HeroSlide[] | null;
+}
+
+export default function HeroCarousel({ slides: slidesProp }: HeroCarouselProps) {
+  const slides = slidesProp?.length ? slidesProp : defaultSlides;
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
-  // Auto-play functionality
+  useEffect(() => {
+    setCurrentSlide(0);
+  }, [slides.length]);
+
   useEffect(() => {
     if (!isAutoPlaying) return;
-
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000); // Change slide every 5 seconds
-
+    }, 5000);
     return () => clearInterval(interval);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, slides.length]);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
@@ -88,12 +84,12 @@ export default function HeroCarousel() {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
     setIsAutoPlaying(false);
     setTimeout(() => setIsAutoPlaying(true), 10000);
-  }, []);
+  }, [slides.length]);
   const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
     setIsAutoPlaying(false);
     setTimeout(() => setIsAutoPlaying(true), 10000);
-  }, []);
+  }, [slides.length]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.targetTouches[0].clientX;
@@ -134,15 +130,19 @@ export default function HeroCarousel() {
             }`}
           >
             <div className="absolute inset-0">
-              <Image
-                src={slide.image}
-                alt={slide.title}
-                fill
-                className="object-cover object-center"
-                priority={index === 0}
-                quality={90}
-                sizes="100vw"
-              />
+              {slide.image?.trim() ? (
+                <Image
+                  src={slide.image}
+                  alt={slide.title || "Hero slide"}
+                  fill
+                  className="object-cover object-center"
+                  priority={index === 0}
+                  quality={90}
+                  sizes="100vw"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-african-black-900" aria-hidden />
+              )}
               <div className="absolute inset-0 bg-african-gradient-vertical opacity-70" />
             </div>
           </div>

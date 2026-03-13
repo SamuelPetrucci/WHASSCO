@@ -1,6 +1,13 @@
 import Link from "next/link";
+import { getContent, hasStaticPageContent } from "@/lib/content";
+import EditablePageLayout from "@/components/EditablePageLayout";
 
-export default function EarlExumTributePage() {
+export default async function EarlExumTributePage() {
+  const content = await getContent();
+  const pageContent = content.staticPageContent?.["earl-exum-tribute"];
+  if (pageContent && hasStaticPageContent(pageContent)) {
+    return <EditablePageLayout content={pageContent} />;
+  }
   return (
     <div className="bg-gray-50">
       <div className="relative w-full h-64 md:h-80 lg:h-96 bg-gradient-to-br from-primary-700 via-primary-600 to-african-gold-500 flex items-center justify-center px-6">

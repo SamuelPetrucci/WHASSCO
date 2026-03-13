@@ -1,7 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
+import { getContent, hasStaticPageContent } from "@/lib/content";
+import EditablePageLayout from "@/components/EditablePageLayout";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const content = await getContent();
+  const pageContent = content.staticPageContent?.about;
+
+  if (pageContent && hasStaticPageContent(pageContent)) {
+    return <EditablePageLayout content={pageContent} />;
+  }
+
   return (
     <div className="bg-gray-50">
       {/* Hero */}
