@@ -283,6 +283,12 @@ export async function restoreContent(): Promise<boolean> {
   }
 }
 
+function mergeById<T extends { id: string | number }>(saved: T[], defaults: T[]): T[] {
+  const savedIds = new Set(saved.map((item) => item.id));
+  const missing = defaults.filter((item) => !savedIds.has(item.id));
+  return missing.length ? [...missing, ...saved] : saved;
+}
+
 function normalizeContent(c: Partial<SiteContent>): SiteContent {
   const existing = c.staticPageContent && typeof c.staticPageContent === "object" ? c.staticPageContent : {};
   const staticPageContent = { ...existing } as Partial<Record<SitePageKey, StaticPageContent>>;
@@ -290,8 +296,13 @@ function normalizeContent(c: Partial<SiteContent>): SiteContent {
     if (!staticPageContent[key]) staticPageContent[key] = {};
   }
   return {
-    heroSlides: Array.isArray(c.heroSlides) ? c.heroSlides : defaultContent.heroSlides,
-    events: Array.isArray(c.events) ? c.events : defaultContent.events,
+    // Seed any new default slides/events that aren't in saved CMS content yet (so deploys can add featured events live).
+    heroSlides: Array.isArray(c.heroSlides)
+      ? mergeById(c.heroSlides, defaultContent.heroSlides)
+      : defaultContent.heroSlides,
+    events: Array.isArray(c.events)
+      ? mergeById(c.events, defaultContent.events)
+      : defaultContent.events,
     galleryItems: Array.isArray(c.galleryItems) ? c.galleryItems : defaultContent.galleryItems,
     customPages: Array.isArray(c.customPages) ? c.customPages : defaultContent.customPages,
     home: c.home && typeof c.home === "object" ? c.home : defaultContent.home,
