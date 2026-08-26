@@ -20,15 +20,33 @@ function HeroCtaLink({
   className: string;
   children: React.ReactNode;
 }) {
+  const stopCarouselTouch = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+  };
+
   if (isExternalHref(href)) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        onTouchStart={stopCarouselTouch}
+        onTouchEnd={stopCarouselTouch}
+        onClick={stopCarouselTouch}
+      >
         {children}
       </a>
     );
   }
   return (
-    <Link href={href} className={className}>
+    <Link
+      href={href}
+      className={className}
+      onTouchStart={stopCarouselTouch}
+      onTouchEnd={stopCarouselTouch}
+      onClick={stopCarouselTouch}
+    >
       {children}
     </Link>
   );
@@ -96,8 +114,9 @@ export default function HeroCarousel({ slides: slidesProp }: HeroCarouselProps) 
   const slides = slidesProp?.length ? slidesProp : defaultSlides;
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const didSwipe = useRef(false);
 
   useEffect(() => {
     setCurrentSlide(0);
@@ -131,12 +150,30 @@ export default function HeroCarousel({ slides: slidesProp }: HeroCarouselProps) 
 
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.targetTouches[0].clientX;
+    touchStartY.current = e.targetTouches[0].clientY;
+    didSwipe.current = false;
   };
   const onTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.targetTouches[0].clientX;
+    if (touchStartX.current == null || touchStartY.current == null) return;
+    const dx = e.targetTouches[0].clientX - touchStartX.current;
+    const dy = e.targetTouches[0].clientY - touchStartY.current;
+    // Ignore mostly-vertical scrolls; only treat clear horizontal drags as swipes
+    if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+      didSwipe.current = true;
+    }
   };
-  const onTouchEnd = () => {
-    const diff = touchStartX.current - touchEndX.current;
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current == null || !didSwipe.current) {
+      touchStartX.current = null;
+      touchStartY.current = null;
+      didSwipe.current = false;
+      return;
+    }
+    const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
+    const diff = touchStartX.current - endX;
+    touchStartX.current = null;
+    touchStartY.current = null;
+    didSwipe.current = false;
     if (Math.abs(diff) > SWIPE_THRESHOLD) {
       if (diff > 0) nextSlide();
       else prevSlide();
@@ -151,7 +188,7 @@ export default function HeroCarousel({ slides: slidesProp }: HeroCarouselProps) 
       onTouchEnd={onTouchEnd}
     >
       {/* Decorative Pan-African stripe pattern */}
-      <div className="absolute top-0 left-0 right-0 h-2 flex z-30">
+      <div className="absolute top-0 left-0 right-0 h-2 flex z-30 pointer-events-none">
         <div className="flex-1 bg-african-green-500" />
         <div className="flex-1 bg-african-red-500" />
         <div className="flex-1 bg-african-black-900" />
@@ -159,7 +196,7 @@ export default function HeroCarousel({ slides: slidesProp }: HeroCarouselProps) 
       </div>
 
       {/* Carousel slides — full bleed, object-cover + object-center = no stretch */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 pointer-events-none">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
@@ -191,7 +228,7 @@ export default function HeroCarousel({ slides: slidesProp }: HeroCarouselProps) 
       {(() => {
         const slide = slides[currentSlide];
         return (
-          <div className="relative z-20 h-full min-h-[58vh] sm:min-h-[52vh] md:min-h-0 md:h-full flex items-center">
+          <div className="relative z-20 h-full min-h-[58vh] sm:min-h-[52vh] md:min-h-0 md:h-full flex items-center pb-14 sm:pb-16">
             <div className="container mx-auto px-4 py-12 sm:py-16 md:py-0 md:flex md:items-center w-full">
               <div className="max-w-3xl mx-auto text-center text-white">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 md:mb-6 drop-shadow-lg leading-tight">
@@ -200,7 +237,7 @@ export default function HeroCarousel({ slides: slidesProp }: HeroCarouselProps) 
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-5 sm:mb-6 md:mb-8 text-white/90 drop-shadow-md line-clamp-3 sm:line-clamp-none">
                   {slide.description}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                <div className="relative z-40 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                   <HeroCtaLink
                     href={slide.primaryButtonLink}
                     className="bg-african-gold-500 text-african-black-900 px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-semibold hover:bg-african-gold-400 transition-all duration-300 shadow-lg active:scale-95 text-sm sm:text-base"
@@ -261,8 +298,8 @@ export default function HeroCarousel({ slides: slidesProp }: HeroCarouselProps) 
         </button>
       </div>
 
-      {/* Bottom wave */}
-      <div className="absolute bottom-0 left-0 right-0 z-20">
+      {/* Bottom wave — decorative only; must not block CTA clicks */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none" aria-hidden>
         <svg className="w-full h-8 sm:h-10 md:h-12 fill-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
           <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" />
         </svg>
