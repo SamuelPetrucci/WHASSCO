@@ -6,6 +6,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import type { HeroSlide } from "@/lib/content-types";
 
 const SWIPE_THRESHOLD = 50;
+const AUTOPLAY_MS = 8000;
+const RESUME_AUTOPLAY_MS = 14000;
 
 function isExternalHref(href: string): boolean {
   return /^https?:\/\//i.test(href.trim());
@@ -123,30 +125,31 @@ export default function HeroCarousel({ slides: slidesProp }: HeroCarouselProps) 
   }, [slides.length]);
 
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (!isAutoPlaying || slides.length < 2) return;
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, AUTOPLAY_MS);
     return () => clearInterval(interval);
   }, [isAutoPlaying, slides.length]);
 
+  const pauseThenResume = useCallback(() => {
+    setIsAutoPlaying(false);
+    window.setTimeout(() => setIsAutoPlaying(true), RESUME_AUTOPLAY_MS);
+  }, []);
+
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
-    setIsAutoPlaying(false);
-    // Resume auto-play after 10 seconds
-    setTimeout(() => setIsAutoPlaying(true), 10000);
+    pauseThenResume();
   };
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  }, [slides.length]);
+    pauseThenResume();
+  }, [slides.length, pauseThenResume]);
   const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  }, [slides.length]);
+    pauseThenResume();
+  }, [slides.length, pauseThenResume]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.targetTouches[0].clientX;
@@ -195,42 +198,51 @@ export default function HeroCarousel({ slides: slidesProp }: HeroCarouselProps) 
         <div className="flex-1 bg-african-gold-500" />
       </div>
 
-      {/* Carousel slides — full bleed, object-cover + object-center = no stretch */}
+      {/* Carousel slides — full bleed, soft crossfade + slow zoom on the active image */}
       <div className="absolute inset-0 pointer-events-none">
-        {slides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
-            }`}
-          >
-            <div className="absolute inset-0">
-              {slide.image?.trim() ? (
-                <Image
-                  src={slide.image}
-                  alt={slide.title || "Hero slide"}
-                  fill
-                  className="object-cover object-center"
-                  priority={index === 0}
-                  quality={90}
-                  sizes="100vw"
-                />
-              ) : (
-                <div className="absolute inset-0 bg-african-black-900" aria-hidden />
-              )}
-              <div className="absolute inset-0 bg-african-gradient-vertical opacity-70" />
+        {slides.map((slide, index) => {
+          const isActive = index === currentSlide;
+          return (
+            <div
+              key={slide.id}
+              className={`hero-slide-layer absolute inset-0 ${
+                isActive ? "opacity-100 z-10" : "opacity-0 z-0"
+              }`}
+              aria-hidden={!isActive}
+            >
+              <div className="absolute inset-0 overflow-hidden">
+                {slide.image?.trim() ? (
+                  <Image
+                    src={slide.image}
+                    alt={slide.title || "Hero slide"}
+                    fill
+                    className={`hero-slide-image object-cover object-center ${
+                      isActive ? "scale-105" : "scale-100"
+                    }`}
+                    priority={index === 0}
+                    quality={90}
+                    sizes="100vw"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-african-black-900" aria-hidden />
+                )}
+                <div className="absolute inset-0 bg-african-gradient-vertical opacity-70" />
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Content — single block for current slide, responsive type and padding for mobile */}
+      {/* Content — fades/slides in with each slide change */}
       {(() => {
         const slide = slides[currentSlide];
         return (
           <div className="relative z-20 h-full min-h-[58vh] sm:min-h-[52vh] md:min-h-0 md:h-full flex items-center pb-14 sm:pb-16">
             <div className="container mx-auto px-4 py-12 sm:py-16 md:py-0 md:flex md:items-center w-full">
-              <div className="max-w-3xl mx-auto text-center text-white">
+              <div
+                key={slide.id}
+                className="hero-slide-copy max-w-3xl mx-auto text-center text-white"
+              >
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 md:mb-6 drop-shadow-lg leading-tight">
                   {slide.title}
                 </h1>

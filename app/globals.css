@@ -169,6 +169,40 @@ body {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
   }
+
+  /* Hero carousel — override global 150ms so crossfades feel intentional */
+  .hero-slide-layer {
+    transition: opacity 1.4s cubic-bezier(0.45, 0, 0.2, 1);
+  }
+
+  .hero-slide-image {
+    transition: transform 9s ease-out;
+  }
+
+  .hero-slide-copy {
+    animation: heroCopyIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes heroCopyIn {
+    from {
+      opacity: 0;
+      transform: translateY(0.6rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-slide-layer,
+    .hero-slide-image {
+      transition: none;
+    }
+    .hero-slide-copy {
+      animation: none;
+    }
+  }
   
   /* Enhanced scrollbar for webkit browsers */
   ::-webkit-scrollbar {
