@@ -60,7 +60,7 @@ export default async function GalleryPage() {
                         rel="noopener noreferrer"
                         className="inline-block mt-6 bg-african-gradient text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all shadow-md"
                       >
-                        More information →
+                        Register today! →
                       </a>
                     )}
                   </div>

@@ -7,7 +7,45 @@ import type { HeroSlide } from "@/lib/content-types";
 
 const SWIPE_THRESHOLD = 50;
 
+function isExternalHref(href: string): boolean {
+  return /^https?:\/\//i.test(href.trim());
+}
+
+function HeroCtaLink({
+  href,
+  className,
+  children,
+}: {
+  href: string;
+  className: string;
+  children: React.ReactNode;
+}) {
+  if (isExternalHref(href)) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 const defaultSlides: HeroSlide[] = [
+  {
+    id: 5,
+    title: "Beyond the Ballot",
+    description:
+      "A community conversation on civic engagement. Monday, Sept 21, 2026 · 6:00–7:30 PM at Noah Webster Library.",
+    image: "/images/events/event2.jpeg",
+    primaryButtonText: "Register today!",
+    primaryButtonLink: "https://shorturl.at/D6dDC",
+    secondaryButtonText: "Event details",
+    secondaryButtonLink: "/gallery",
+  },
   {
     id: 1,
     title: "Empowering Families, Supporting Youth, Celebrating Culture",
@@ -163,19 +201,19 @@ export default function HeroCarousel({ slides: slidesProp }: HeroCarouselProps) 
                   {slide.description}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-                  <Link
+                  <HeroCtaLink
                     href={slide.primaryButtonLink}
                     className="bg-african-gold-500 text-african-black-900 px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-semibold hover:bg-african-gold-400 transition-all duration-300 shadow-lg active:scale-95 text-sm sm:text-base"
                   >
                     {slide.primaryButtonText}
-                  </Link>
+                  </HeroCtaLink>
                   {slide.secondaryButtonText && slide.secondaryButtonLink && (
-                    <Link
+                    <HeroCtaLink
                       href={slide.secondaryButtonLink}
                       className="bg-transparent border-2 border-white text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-all duration-300 active:scale-95 text-sm sm:text-base"
                     >
                       {slide.secondaryButtonText}
-                    </Link>
+                    </HeroCtaLink>
                   )}
                 </div>
               </div>

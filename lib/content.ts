@@ -71,6 +71,17 @@ This controls where the Donate button and /donate route send visitors.`;
 const defaultContent: SiteContent = {
   heroSlides: [
     {
+      id: 5,
+      title: "Beyond the Ballot",
+      description:
+        "A community conversation on civic engagement. Monday, Sept 21, 2026 · 6:00–7:30 PM at Noah Webster Library.",
+      image: "/images/events/event2.jpeg",
+      primaryButtonText: "Register today!",
+      primaryButtonLink: "https://shorturl.at/D6dDC",
+      secondaryButtonText: "Event details",
+      secondaryButtonLink: "/gallery",
+    },
+    {
       id: 1,
       title: "Empowering Families, Supporting Youth, Celebrating Culture",
       description:
@@ -116,6 +127,17 @@ const defaultContent: SiteContent = {
     },
   ],
   events: [
+    {
+      id: "beyond-the-ballot-2026",
+      title: "Beyond the Ballot: A Community Conversation on Civic Engagement",
+      date: "Monday, Sept 21, 2026",
+      time: "6:00 PM – 7:30 PM",
+      location: "Noah Webster Library — NWL Meeting Room",
+      address: "20 South Main Street, West Hartford, CT 06107",
+      infoUrl: "https://shorturl.at/D6dDC",
+      flyerImage: "/images/events/event2.jpeg",
+      sponsorLabel: "Your voice. Our community. Our future.",
+    },
     {
       id: "black-business-expo-2026",
       title: "Black Business Expo",

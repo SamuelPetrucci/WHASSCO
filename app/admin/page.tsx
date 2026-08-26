@@ -374,9 +374,9 @@ function HeroEditor({
   return (
     <div className="space-y-6">
       <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-        <p className="font-medium">Hero buttons link to real pages</p>
+        <p className="font-medium">Hero button links</p>
         <p className="mt-1 text-amber-800">
-          Choose where each hero button should go using the dropdown. Only existing pages and custom pages are shown, so links stay valid.
+          Choose a site page from the dropdown, or paste an external URL (Eventbrite, registration links, etc.) in the custom URL field.
         </p>
       </div>
       <div className="flex justify-between items-center">
@@ -989,6 +989,10 @@ function HomeEditor({
   );
 }
 
+function isExternalHref(href: string): boolean {
+  return /^https?:\/\//i.test(href.trim());
+}
+
 function HeroLinkField({
   label,
   value,
@@ -1000,29 +1004,44 @@ function HeroLinkField({
   options: HeroLinkOption[];
   onChange: (href: string) => void;
 }) {
-  const hasValue = value && options.some((o) => o.href === value);
-  // Include an extra option if the current value doesn't match any known option (for legacy/custom URLs)
-  const extendedOptions = hasValue || !value
-    ? options
-    : [...options, { label: `Custom: ${value}`, href: value }];
+  const matchedOption = value && options.some((o) => o.href === value);
+  const useCustom = Boolean(value && !matchedOption);
+  const selectValue = matchedOption ? value : useCustom ? "__custom__" : "";
 
   return (
-    <div>
+    <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
       <select
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
+        value={selectValue}
+        onChange={(e) => {
+          const next = e.target.value;
+          if (next === "__custom__") {
+            onChange(isExternalHref(value) ? value : "https://");
+            return;
+          }
+          onChange(next);
+        }}
         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
       >
         <option value="">Select a page…</option>
-        {extendedOptions.map((opt) => (
+        {options.map((opt) => (
           <option key={opt.href} value={opt.href}>
             {opt.label} ({opt.href})
           </option>
         ))}
+        <option value="__custom__">External / custom URL…</option>
       </select>
-      <p className="mt-1 text-xs text-gray-500">
-        Choose a page from the site. Only valid routes and custom pages are shown.
+      {(useCustom || selectValue === "__custom__") && (
+        <input
+          type="url"
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="https://www.eventbrite.com/..."
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+        />
+      )}
+      <p className="text-xs text-gray-500">
+        Use a site page, or choose External / custom URL for Eventbrite and other registration links.
       </p>
     </div>
   );
